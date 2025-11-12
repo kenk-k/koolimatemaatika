@@ -1,6 +1,10 @@
 """
 Autorid: Kaur Kenk, Nansen Palo
 Teema: Koolimatemaatika mäng
+
+Antud fail on koolimatemaatika mängu põhifailile lisafail,
+kus on defineeritud latexi formaadis suvaliste võrrandite
+ja nende lahenduste genereerimine.
 """
 
 import random

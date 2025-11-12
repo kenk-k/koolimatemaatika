@@ -82,7 +82,7 @@ def eksponentsiaal():
   #sellest ja baasist saab välja arvutada lahenduse
   parem_pool = baas**random.randint(1,5)
   lahendus = log(parem_pool, baas)
-  vorrand = f'${kordaja} \\cdot {baas}^{'x'} = {parem_pool*kordaja}$'
+  vorrand = f"${kordaja} \\cdot {baas}^{'x'} = {parem_pool*kordaja}$"
   return vorrand, lahendus
 
 def logaritm():

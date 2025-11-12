@@ -5,13 +5,16 @@ Teema: Koolimatemaatika mäng
 
 Vajalik programmi tööks: matplotlib, pythoni versioon vähemalt 3.10
 
-Inspiratsioon: kergelt inspireeritud pranglimisest.
+Käivitamise juhend: installida kas läbi pipi või thonny matplotlib
+ja tkinter, seejärel kas terminalis või läbi koodiredaktori
+käivitada __main__.py.
+
+Inspiratsioon: Programm on kergelt inspireeritud pranglimisest.
 latexi displaymisega aitas: 
 https://www.tutorialspoint.com/how-to-display-latex-
 in-real-time-in-a-text-box-in-tkinter
-ja matplotlibi dokumentatsioon.
-tkinteriga aitas tkdocs.com ja eelnev kogemus keskkoolist, samuti oopiga
-aitas eelnev kogemus.
+Samuti on kasutatud matplotlibi dokumentatsiooni,
+tkdocs.com veebilehte.
 
 """
 import tkinter as tk
@@ -29,6 +32,7 @@ import funktsioonid as fun
 def main():
 
 
+    #Programm kasutab võrrandite printimiseks TkAgg backendi
     matplotlib.use('TkAgg')
     prog = Programm()
     prog.mainloop()
@@ -63,6 +67,7 @@ class Programm(tk.Tk):
 
         """Teeb tiitli raami ja selle sees olevad aknad."""
         self.tiitel_raam = ttk.Frame(self)
+        #Raamis on 2 rida ja 3 veergu.
         self.tiitel_raam.rowconfigure(0, weight=2)
         self.tiitel_raam.rowconfigure(1, weight=1)
         self.tiitel_raam.columnconfigure(1, weight=1)
@@ -78,7 +83,7 @@ class Programm(tk.Tk):
         self.tiitel_nimi.grid(column = 1, row = 0, columnspan=3,
                               sticky = 'nsew')
 
-
+        #Sätib tiitellehe nuppude fondi ja suuruse.
         self.tiitelnupp_stiil = ttk.Style()
         self.tiitelnupp_stiil.configure('Tiitel.TButton',font=('Arial',25))
         self.start_nupp = ttk.Button(self.tiitel_raam, text='Mängima!',
@@ -153,43 +158,57 @@ class Programm(tk.Tk):
         self.mangu_raam = ttk.Frame(self)
         self.mangu_raam.grid(column = 0, row = 0,
                              sticky = 'nsew')
+        #mängul on 1 veerg ja 5 rida, võrrandi rida on teistest
+        #2 korda suurem.
         self.mangu_raam.columnconfigure(0, weight=1)
         self.mangu_raam.rowconfigure(0, weight = 2)
         self.mangu_raam.rowconfigure(1, weight = 1)
         self.mangu_raam.rowconfigure(2, weight = 1)
         self.mangu_raam.rowconfigure(3, weight = 1)
         self.mangu_raam.rowconfigure(4, weight = 1)
+
+        #Genereeritakse lahendatav võrrand ja sellele vastav lahendus.
         self.uus_funktsioon()
 
         self.funktsioon = ttk.Label(self.mangu_raam)
         self.funktsioon.grid(column = 0, row = 0, sticky= 'ns')
 
+        #Tehakse uus matplotlibi figuur ja pannakse see self.funktsioon
+        #labeli sisse.
         self.figuur = matplotlib.figure.Figure(figsize = (10, 3), dpi = 100)
         self.latex = FigureCanvasTkAgg(self.figuur, master = self.funktsioon)
         self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='ns')
     
+        #Võrrand prinditakse matplotlibi figuuri sisse
         self.figuur.text(0.5, 0.5, self.vorrand,
                          horizontalalignment = 'center',
                          verticalalignment = 'center', fontsize = 40)
         self.latex.draw()
-
+        
+        #Vastuse kasti tegemine
         self.sisestus = tk.StringVar()
         self.vastuse_kast = ttk.Entry(self.mangu_raam,
                                       font = ('Arial', 20),
                                       textvariable = self.sisestus)
         self.vastuse_kast.grid(column = 0, row = 1, sticky = 'ns')
 
+        #Kontrollimise nupp
         self.vastamis_nupp = ttk.Button(self.mangu_raam, text = 'Kontrolli',
                                         command = self.kontrolli)
         self.vastamis_nupp.grid(column = 0, row = 2)
-
+        
+        #Näitab, mitmenda küsimuse peal kasutaja on
         self.loendur = ttk.Label(self.mangu_raam,
                                  text = f'{self.kysimuse_counter}/20')
         self.loendur.grid(column = 0, row = 3)
 
+        #Näitab, kui kasutaja on sisestanud midagi valesti, näitab
+        #ka, kas vastus oli õige/vale
         self.sisestuse_info = ttk.Label(self.mangu_raam)
         self.sisestuse_info.grid(column = 0, row = 4)
 
+        #Enter nupp binditud kontrollimiseks, et ei
+        #peaks iga kord kontrollimise nuppu vajutama
         self.bind('<Return>', self.kontrolli)
 
     def uus_funktsioon(self):
@@ -235,6 +254,8 @@ class Programm(tk.Tk):
             else:
                 self.sisestuse_info.configure(text='Vale vastus!')
         else:
+            #kui kasutaja sisestas midagi muud peale täisarvu,
+            #ütleb programmis sellest kasutajale
             try:
                 self.vastuse_number = int(self.vastus)
             except ValueError:
@@ -246,8 +267,10 @@ class Programm(tk.Tk):
             else:
                 self.sisestuse_info.configure(text='Vale vastus!')
 
+        #genereerib uuesti suvalise võrrandi ja sellele
+        #vastava lahenduse
         self.uus_funktsioon()
-
+        
         self.kysimuse_counter += 1
         #Lõpetab mängu, kui 20 küsimust on vastatud
         if self.kysimuse_counter == 20:
@@ -262,6 +285,7 @@ class Programm(tk.Tk):
             self.latex.draw()
             #uuendab loendurit
             self.loendur.configure(text = f'{self.kysimuse_counter}/20')
+            #kustutab kasutaja eelmise sisestuse
             self.vastuse_kast.delete(0, 'end')
 
     def lopp(self):
@@ -272,7 +296,8 @@ class Programm(tk.Tk):
         #Teeb nii, et Enterit vajutades enam ei kutsutaks kontrolli()
         #funktsiooni
         self.unbind('<Return>')
-
+        #Hävitab mängu raami ja loob lõpuekraani raami, kus on kasutaja
+        #tulemus 20-st ja kaks nuppu
         self.mangu_raam.destroy()
         self.lopp_raam = ttk.Frame(self)
         self.lopp_raam.grid(column = 0, row = 0, sticky = 'nsew')
@@ -284,10 +309,12 @@ class Programm(tk.Tk):
                                  text = f'Sinu tulemus on {self.oiged}/20.',
                                  font = ('Arial', 30))
         self.tulemus.grid(column = 0, row = 0, columnspan = 2)
+        #Nupp, millega saab minna tiitellehele ja mängu uuesti alustada
         self.uuesti_nupp = ttk.Button(self.lopp_raam,
                                       text = 'Tagasi tiitelehele',
                                       command = self.uuesti)
         self.uuesti_nupp.grid(column = 0, row = 1)
+        
         self.sulgemis_nupp_lopp = ttk.Button(self.lopp_raam,
                                              text = 'Sulge',
                                              command = self.destroy)
@@ -299,6 +326,7 @@ class Programm(tk.Tk):
         ning läheb tagasi tiitellehele."""
         self.kysimuse_counter = 1
         self.oiged = 0
+        #Hävitab lõpuekraani raami ja läheb tagasi tiitellehe raamile
         self.lopp_raam.destroy()
         self.tiitel()
         

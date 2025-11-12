@@ -1,5 +1,6 @@
 """
 Autorid: Kaur Kenk, Nansen Palo
+Teema: Koolimatemaatika mäng
 """
 
 import random
@@ -9,9 +10,11 @@ def lineaar():
 
   """Genereerib täisarvulise vastuse ja
      sellele vastava lineaarvõrrandi."""
+  
   lahendus = random.randint(-20, 21)
   a = random.choice([i for i in range(-20, 21) if i != 0])
   b = random.randint(-20, 21)
+  #Arvutab välja, mis võrrandi parem pool peaks olema.
   c = a*lahendus + b
   vorrand = f'${a}x + {b} = {c}$'
   return vorrand, lahendus
@@ -19,7 +22,7 @@ def lineaar():
 def ruut():
 
   """Genereerib 2 täisarvulist vastust ja
-     nendele vastava ruutvõrrandi latexis"""
+     nendele vastava ruutvõrrandi Viete'i teoreemi abillatexis"""
   lahendus1 = random.randint(-20, 21)
   lahendus2 = random.randint(-20, 21)
   vorrandi_kordaja = random.choice([i for i in range(-4,5) if i != 0])
@@ -33,6 +36,8 @@ def ruut():
   #vabaliige2 = (-lahendus1*lahendus2/vabaliikmete_suhe)
   vabaliige2 = 0
   lineaar_kordaja = -(lahendus1 + lahendus2)
+  # järgnev if-elif-else plokk on selle jaoks, et negatiivsete
+  #kordajate puhul ei oleks latexi formaadis miinuse ees plussi
   if (vorrandi_kordaja*lineaar_kordaja < 0 and
       vorrandi_kordaja*vabaliige1 < 0):
     vorrand = ('$' + str(vorrandi_kordaja) + 'x^{2}'
@@ -54,7 +59,7 @@ def ruut():
                + str(vorrandi_kordaja*lineaar_kordaja) + 'x + ' 
                + str(vorrandi_kordaja*vabaliige1) + ' ='
                + str(vorrandi_kordaja*vabaliige2) +'$')
-
+  #võtab x^2 eest 1-e ära, kui võrrandi kordaja on 1 või -1
   if vorrandi_kordaja == 1:
     vorrand = vorrand[0:1] + vorrand[2:]
   elif vorrandi_kordaja == -1:
@@ -69,7 +74,8 @@ def eksponentsiaal():
   
   kordaja = random.choice([i for i in range(-5, 6) if i != 0])
   
-
+  #Võrrandi parem pool on baas astmes mingi positiivne täisarv,
+  #sellest ja baasist saab välja arvutada lahenduse
   parem_pool = baas**random.randint(1,5)
   lahendus = log(parem_pool, baas)
   vorrand = f'${kordaja} \\cdot {baas}^{'x'} = {parem_pool*kordaja}$'

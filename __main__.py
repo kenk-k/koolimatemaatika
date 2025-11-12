@@ -175,14 +175,14 @@ class Programm(tk.Tk):
 
         #Tehakse uus matplotlibi figuur ja pannakse see self.funktsioon
         #labeli sisse.
-        self.figuur = matplotlib.figure.Figure(figsize = (10, 3), dpi = 100)
+        self.figuur = matplotlib.figure.Figure(figsize = (4, 1), dpi = 100)
         self.latex = FigureCanvasTkAgg(self.figuur, master = self.funktsioon)
         self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='ns')
     
         #Võrrand prinditakse matplotlibi figuuri sisse
         self.figuur.text(0.5, 0.5, self.vorrand,
                          horizontalalignment = 'center',
-                         verticalalignment = 'center', fontsize = 40)
+                         verticalalignment = 'center', fontsize = 20)
         self.latex.draw()
         
         #Vastuse kasti tegemine
@@ -281,7 +281,7 @@ class Programm(tk.Tk):
             self.figuur.text(0.5, 0.5, self.vorrand,
                              horizontalalignment = 'center',
                              verticalalignment = 'center',
-                             fontsize = 30)
+                             fontsize = 20)
             self.latex.draw()
             #uuendab loendurit
             self.loendur.configure(text = f'{self.kysimuse_counter}/20')

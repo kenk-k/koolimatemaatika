@@ -135,3 +135,78 @@ def trigonomeetriline():
 
   vorrand = f'${trig_tex}(x) = {val}$'
   return vorrand, lahendus
+
+def tuletis():
+    """
+    Genereerib juhusliku funktsiooni.
+    Tagastab:
+        (originaalfunktsioon(latex), lahendus(string))
+    """
+
+    funktsiooni_tuup = random.choice(["polünoom", "exp", "ln", "trig"])
+
+    #Vajalik selleks, et tagastaks 4 - 5, mitte 4 + -5 (latex)
+    def latex_term(kordaja, expr):
+        if kordaja == 0:
+            return ""
+        if kordaja > 0:
+            return f" + {kordaja}{expr}"
+        else:
+            return f" - {-kordaja}{expr}"
+
+    #(python)
+    def python_term(kordaja, expr):
+        if kordaja == 0:
+            return ""
+        if kordaja > 0:
+            return f" + {kordaja}*{expr}"
+        else:
+            return f" - {-kordaja}*{expr}"
+
+   #Polunoomi lahendus
+    if funktsiooni_tuup == "polünoom":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        b = random.choice([i for i in range(-5, 6) if i != 0])
+        c = random.randint(-5, 5)
+
+        # LaTeX originaalfunktsioon
+        vorrand = f"$f(x) = {a}x^2{latex_term(b,'x')}{latex_term(c,'')}$"
+
+        # Python tuletisfunktsioon
+        lahendus = f"{2*a}*x{python_term(b,'1')}".strip()
+
+        return vorrand, lahendus
+
+    #Exponentsiaali lahendus  a * e^{kx}
+    if funktsiooni_tuup == "exp":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        k = random.choice([i for i in range(-5, 6) if i != 0])
+
+        vorrand = f"$f(x) = {a}e^{{{k}x}}$"
+        lahendus = f"{a*k}*e**({k}*x)"
+
+        return vorrand, lahendus
+
+    #Logaritmi lahendus  a ln(x)
+    if funktsiooni_tuup == "ln":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+
+        vorrand = f"$f(x) = {a}\\ln(x)$"
+        lahendus = f"{a}/x"
+
+        return vorrand, lahendus
+
+    #Trigonomeetrilise lahendus  a*sin(kx) / a*cos(kx)
+    if funktsiooni_tuup == "trig":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        k = random.choice([1, 2, 3, 4])
+        trig = random.choice(["sin", "cos"])
+
+        if trig == "sin":
+            vorrand = f"$f(x) = {a}\\sin({k}x)$"
+            lahendus = f"{a*k}*cos({k}*x)"
+        else:
+            vorrand = f"$f(x) = {a}\\cos({k}x)$"
+            lahendus = f"-{a*k}*sin({k}*x)"
+
+        return vorrand, lahendus

@@ -9,6 +9,7 @@ ja nende lahenduste genereerimine.
 
 import random
 from math import log
+import numpy as np
 
 def lineaar():
 
@@ -103,12 +104,34 @@ def logaritm():
 
 #TODO: lisada ln-ile funktsioon
 
-# Trigonomeetriline funktsioon, ei tööta
 def trigonomeetriline():
-  x = sp.Symbol('x')
-  lahendus = random.randint(0, 361)
-  solution_rad = sp.rad(lahendus)
-  trig = random.choice([sp.sin, sp.cos])
-  c = trig_fun(solution_rad)
-  vorrand = sp.Eq(trig_fun(x), c)
-  return vorrand, lahendus, trig_fun
+  """Genererib LaTeX-formaadis trigonomeetrilise võrrandi ja täiskraadilise lahenduse.
+     Tagastab (vorrand, lahendus), kus vorrand on LaTeX-string nagu
+     '$\\sin(x) = \\frac{\\sqrt{3}}{2}$' ning lahendus on kraadides."""
+  angles = [0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330]
+  lahendus = random.choice(angles)
+  trig = random.choice(['sin', 'cos'])
+
+  sin_map = {
+    0: r'0', 30: r'\frac{1}{2}', 45: r'\frac{\sqrt{2}}{2}', 60: r'\frac{\sqrt{3}}{2}', 90: r'1',
+    120: r'\frac{\sqrt{3}}{2}', 135: r'\frac{\sqrt{2}}{2}', 150: r'\frac{1}{2}', 180: r'0',
+    210: r'-\frac{1}{2}', 225: r'-\frac{\sqrt{2}}{2}', 240: r'-\frac{\sqrt{3}}{2}', 270: r'-1',
+    300: r'-\frac{\sqrt{3}}{2}', 315: r'-\frac{\sqrt{2}}{2}', 330: r'-\frac{1}{2}'
+  }
+
+  cos_map = {
+    0: r'1', 30: r'\frac{\sqrt{3}}{2}', 45: r'\frac{\sqrt{2}}{2}', 60: r'\frac{1}{2}', 90: r'0',
+    120: r'-\frac{1}{2}', 135: r'-\frac{\sqrt{2}}{2}', 150: r'-\frac{\sqrt{3}}{2}', 180: r'-1',
+    210: r'-\frac{\sqrt{3}}{2}', 225: r'-\frac{\sqrt{2}}{2}', 240: r'-\frac{1}{2}', 270: r'0',
+    300: r'\frac{1}{2}', 315: r'\frac{\sqrt{2}}{2}', 330: r'\frac{\sqrt{3}}{2}'
+  }
+
+  if trig == 'sin':
+    val = sin_map[lahendus]
+    trig_tex = r'\sin'
+  else:
+    val = cos_map[lahendus]
+    trig_tex = r'\cos'
+
+  vorrand = f'${trig_tex}(x) = {val}$'
+  return vorrand, lahendus

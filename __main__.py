@@ -216,7 +216,7 @@ class Programm(tk.Tk):
            salvestab võrrandi latexi sõne ja vastused
            mängu jaoks muutujatesse"""
         #TODO: rohkem võrrandeid mängu
-        self.vorrandi_number = randint(1,4)
+        self.vorrandi_number = randint(1,5)
         #self.vorrandi_number = 2
         match self.vorrandi_number:
             case 1:
@@ -227,6 +227,8 @@ class Programm(tk.Tk):
                 self.vorrand, self.lahendus = fun.eksponentsiaal()
             case 4:
                 self.vorrand, self.lahendus = fun.logaritm()
+            case 5:
+                self.vorrand, self.lahendus = fun.trigonomeetriline()
     
     def kontrolli(self, event=None):
         """Kontrollib vastust, mis kasutaja sisestas ja 

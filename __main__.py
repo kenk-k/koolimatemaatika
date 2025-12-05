@@ -265,11 +265,22 @@ class Programm(tk.Tk):
             except ValueError:
                 self.sisestuse_info.configure(text='Sisesta vastus täisarvuna')
                 return None
-            if int(self.vastus) == self.lahendus:
-                self.oiged += 1
-                self.sisestuse_info.configure(text='Õige vastus!')
+            
+            # Kontrollib, kas lahendus on list (trigonomeetriline) või üksik väärtus
+            if isinstance(self.lahendus, list):
+                # Trigonomeetrilise võrrandi puhul peab vastus olema üks lahendustest
+                if int(self.vastus) in self.lahendus:
+                    self.oiged += 1
+                    self.sisestuse_info.configure(text='Õige vastus!')
+                else:
+                    self.sisestuse_info.configure(text='Vale vastus!')
             else:
-                self.sisestuse_info.configure(text='Vale vastus!')
+                # Teiste võrrandite puhul on tavaline võrdlus
+                if int(self.vastus) == self.lahendus:
+                    self.oiged += 1
+                    self.sisestuse_info.configure(text='Õige vastus!')
+                else:
+                    self.sisestuse_info.configure(text='Vale vastus!')
 
         #genereerib uuesti suvalise võrrandi ja sellele
         #vastava lahenduse

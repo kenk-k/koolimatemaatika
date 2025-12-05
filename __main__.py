@@ -22,6 +22,8 @@ from tkinter import ttk
 
 from random import randint
 
+import csv
+
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -102,7 +104,12 @@ class Programm(tk.Tk):
                                      style='Tiitel.TButton',
                                      command=self.destroy)
         self.kinni_nupp.grid(column=3, row=1, sticky = 'n')
-
+        
+        self.tulemused2_nupp = ttk.Button(self.tiitel_raam,
+                                          text='Tulemused',
+                                          style='Tiitel.TButton',
+                                          command=self.tulemused)
+        self.tulemused2_nupp.grid(column=0, row = 2, sticky = 'n')
     def juhised(self):
 
         """Teeb uue toplevel akna, kus on juhised.txt failist võetud
@@ -175,7 +182,7 @@ class Programm(tk.Tk):
 
         #Tehakse uus matplotlibi figuur ja pannakse see self.funktsioon
         #labeli sisse.
-        self.figuur = matplotlib.figure.Figure(figsize = (4, 1), dpi = 100)
+        self.figuur = matplotlib.figure.Figure(figsize = (6, 2), dpi = 100)
         self.latex = FigureCanvasTkAgg(self.figuur, master = self.funktsioon)
         self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='ns')
     
@@ -312,12 +319,13 @@ class Programm(tk.Tk):
         #funktsiooni
         self.unbind('<Return>')
         #Hävitab mängu raami ja loob lõpuekraani raami, kus on kasutaja
-        #tulemus 20-st ja kaks nuppu
+        #tulemus 20-st ja kolm nuppu
         self.mangu_raam.destroy()
         self.lopp_raam = ttk.Frame(self)
         self.lopp_raam.grid(column = 0, row = 0, sticky = 'nsew')
         self.lopp_raam.columnconfigure(0, weight = 1)
         self.lopp_raam.columnconfigure(1, weight = 1)
+        self.lopp_raam.columnconfigure(2, weight = 1)
         self.lopp_raam.rowconfigure(0, weight = 3)
         self.lopp_raam.rowconfigure(1, weight = 1)
         self.tulemus = ttk.Label(self.lopp_raam,
@@ -334,6 +342,10 @@ class Programm(tk.Tk):
                                              text = 'Sulge',
                                              command = self.destroy)
         self.sulgemis_nupp_lopp.grid(column = 1, row = 1)
+        self.tulemuste_nupp = ttk.Button(self.lopp_raam,
+                                         text='Tulemused',
+                                         command = self.tulemused)
+        self.tulemuste_nupp.grid(column = 2, row = 1)
 
     def uuesti(self):
 
@@ -344,6 +356,43 @@ class Programm(tk.Tk):
         #Hävitab lõpuekraani raami ja läheb tagasi tiitellehe raamile
         self.lopp_raam.destroy()
         self.tiitel()
-        
+    
+    def tulemused(self):
+        """Tekitab tulemuste akna ja kuvab tulemused """
+        self.tulemuste_aken = tk.Toplevel(self)
+        self.tulemuste_aken.geometry(f'{round(self.ekraani_laius/2)}x'
+                              + f'{round(self.ekraani_korgus/2)}')
+        stiil = ttk.Style()
+        stiil.configure('Raam.TFrame', background='red')
+        self.tulemuste_aken.rowconfigure(0, weight = 1)
+        self.tulemuste_aken.columnconfigure(0, weight = 1)
+        self.tulemuste_aken.title('Tulemused')
+        self.tulemuste_raam = ttk.Frame(self.tulemuste_aken, style='Raam.TFrame')
+        self.tulemuste_raam.grid(column=0, row=0, sticky='nsew')
+        self.tulemuste_raam.rowconfigure(0, weight = 2)
+        self.tulemuste_raam.rowconfigure(1, weight=1)
+        self.tulemuste_raam.columnconfigure(0, weight=1)
+        self.tulemuste_raam.columnconfigure(1, weight=1)
+
+
+        self.tulemuste_notebook = ttk.Notebook(self.tulemuste_raam)
+        self.tulemuste_notebook.grid(column=0, row=0, columnspan=2,
+                                     sticky='nsew')
+        self.tulemused_20st = ttk.Frame(self.tulemuste_notebook)
+        self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
+        with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
+            csv_lugeja = csv.reader(t_fail)
+            csv
+        self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
+                                      command=self.tulemuste_aken.destroy)
+        self.tagasi_nupp.grid(column = 0, row = 1)
+        self.uus_tulemus_nupp = ttk.Button(self.tulemuste_raam,
+                                           text='Uus tulemus',
+                                           command=self.uus_tulemus)
+        self.uus_tulemus_nupp.grid(column=1, row=1)
+
+        def uus_tulemus(self):
+            pass
+
 if __name__ == '__main__':
     main()

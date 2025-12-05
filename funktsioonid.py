@@ -23,7 +23,21 @@ def lineaar():
   b = random.randint(-20, 21)
   #Arvutab välja, mis võrrandi parem pool peaks olema.
   c = a*lahendus + b
-  vorrand = f'${a}x + {b} = {c}$'
+    
+  # Vasak pool
+  if a == 1:
+    vasak = 'x'
+  elif a == -1:
+    vasak = '-x'
+  else:
+    vasak = f'{a}x'
+  
+  # b lisamine
+  if b >= 0:
+    vorrand = f'${vasak} + {b} = {c}$'
+  else:
+    vorrand = f'${vasak} - {-b} = {c}$'
+  
   return vorrand, lahendus
 
 def ruut():
@@ -33,14 +47,7 @@ def ruut():
   lahendus1 = random.randint(-20, 21)
   lahendus2 = random.randint(-20, 21)
   vorrandi_kordaja = random.choice([i for i in range(-4,5) if i != 0])
-  #TODO: teha nii, et vabaliige saab olla ka paremal pool nii, et
-  #numbrid oleksid täisarvud
-  #vabaliikmete_suhe = random.randint(-4, 5)
-  #while vabaliikmete_suhe == 0:
-  #  vabaliikmete_suhe = random.randint(-4, 5)
-  #vabaliige1 = (lahendus1*lahendus2*(1-(1/vabaliikmete_suhe)))
   vabaliige1 = lahendus1*lahendus2
-  #vabaliige2 = (-lahendus1*lahendus2/vabaliikmete_suhe)
   vabaliige2 = 0
   lineaar_kordaja = -(lahendus1 + lahendus2)
   # järgnev if-elif-else plokk on selle jaoks, et negatiivsete
@@ -109,190 +116,131 @@ def logaritm():
 
 
 def trigonomeetriline():
-    """Genereerib keerulisema trigonomeetrilise võrrandi LaTeX-is.
+    """Genereerib lihtsustatud trigonomeetrilise võrrandi LaTeX-is.
+       Kujul: a*sin(x) = constant või a*cos(x) = constant
        Tagab, et lahendus (kraadides) on täisarv.
        Tagastab (vorrand, lahendus)"""
 
-    voimalikud_lahendused = [30,45,60,90,120,135,150,180,210,225,240,270,300,315,330]
+    voimalikud_lahendused = [30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330]
     lahendus_ = random.choice(voimalikud_lahendused)
 
-    # väärtused kraadide jaoks (latex code, python value)
+    # väärtused kraadide jaoks (latex, lugeja, nimetaja, irrationaalarv)
+    # irratsionaalarv on kas '', 'sqrt(2)', 'sqrt(3)' jne
     sin_map = {
-        30:(r'\frac{1}{2}', 1/2), 45:(r'\frac{\sqrt{2}}{2}', math.sqrt(2)/2),
-        60:(r'\frac{\sqrt{3}}{2}', math.sqrt(3)/2), 90:(r'1', 1),
-        120:(r'\frac{\sqrt{3}}{2}', math.sqrt(3)/2), 135:(r'\frac{\sqrt{2}}{2}', math.sqrt(2)/2),
-        150:(r'\frac{1}{2}', 1/2), 180:(r'0', 0),
-        210:(r'-\frac{1}{2}', -1/2), 225:(r'-\frac{\sqrt{2}}{2}', -math.sqrt(2)/2),
-        240:(r'-\frac{\sqrt{3}}{2}', -math.sqrt(3)/2), 270:(r'-1', -1),
-        300:(r'-\frac{\sqrt{3}}{2}', -math.sqrt(3)/2), 315:(r'-\frac{\sqrt{2}}{2}', -math.sqrt(2)/2),
-        330:(r'-\frac{1}{2}', -1/2)
+        30:(r'\frac{1}{2}', 1, 2, ''), 45:(r'\frac{\sqrt{2}}{2}', 1, 2, 'sqrt(2)'),
+        60:(r'\frac{\sqrt{3}}{2}', 1, 2, 'sqrt(3)'), 90:(r'1', 1, 1, ''),
+        120:(r'\frac{\sqrt{3}}{2}', 1, 2, 'sqrt(3)'), 135:(r'\frac{\sqrt{2}}{2}', 1, 2, 'sqrt(2)'),
+        150:(r'\frac{1}{2}', 1, 2, ''), 180:(r'0', 0, 1, ''),
+        210:(r'-\frac{1}{2}', -1, 2, ''), 225:(r'-\frac{\sqrt{2}}{2}', -1, 2, 'sqrt(2)'),
+        240:(r'-\frac{\sqrt{3}}{2}', -1, 2, 'sqrt(3)'), 270:(r'-1', -1, 1, ''),
+        300:(r'-\frac{\sqrt{3}}{2}', -1, 2, 'sqrt(3)'), 315:(r'-\frac{\sqrt{2}}{2}', -1, 2, 'sqrt(2)'),
+        330:(r'-\frac{1}{2}', -1, 2, '')
     }
 
     cos_map = {
-        30:(r'\frac{\sqrt{3}}{2}', math.sqrt(3)/2), 45:(r'\frac{\sqrt{2}}{2}', math.sqrt(2)/2),
-        60:(r'\frac{1}{2}', 1/2), 90:(r'0', 0),
-        120:(r'-\frac{1}{2}', -1/2), 135:(r'-\frac{\sqrt{2}}{2}', -math.sqrt(2)/2),
-        150:(r'-\frac{\sqrt{3}}{2}', -math.sqrt(3)/2), 180:(r'-1', -1),
-        210:(r'-\frac{\sqrt{3}}{2}', -math.sqrt(3)/2), 225:(r'-\frac{\sqrt{2}}{2}', -math.sqrt(2)/2),
-        240:(r'-\frac{1}{2}', -1/2), 270:(r'0', 0),
-        300:(r'\frac{1}{2}', 1/2), 315:(r'\frac{\sqrt{2}}{2}', math.sqrt(2)/2),
-        330:(r'\frac{\sqrt{3}}{2}', math.sqrt(3)/2)
+        30:(r'\frac{\sqrt{3}}{2}', 1, 2, 'sqrt(3)'), 45:(r'\frac{\sqrt{2}}{2}', 1, 2, 'sqrt(2)'),
+        60:(r'\frac{1}{2}', 1, 2, ''), 90:(r'0', 0, 1, ''),
+        120:(r'-\frac{1}{2}', -1, 2, ''), 135:(r'-\frac{\sqrt{2}}{2}', -1, 2, 'sqrt(2)'),
+        150:(r'-\frac{\sqrt{3}}{2}', -1, 2, 'sqrt(3)'), 180:(r'-1', -1, 1, ''),
+        210:(r'-\frac{\sqrt{3}}{2}', -1, 2, 'sqrt(3)'), 225:(r'-\frac{\sqrt{2}}{2}', -1, 2, 'sqrt(2)'),
+        240:(r'-\frac{1}{2}', -1, 2, ''), 270:(r'0', 0, 1, ''),
+        300:(r'\frac{1}{2}', 1, 2, ''), 315:(r'\frac{\sqrt{2}}{2}', 1, 2, 'sqrt(2)'),
+        330:(r'\frac{\sqrt{3}}{2}', 1, 2, 'sqrt(3)')
     }
 
-    kordaja = [1, 2, -1, -2, 3, -3, 1/2, -1/2]
-    a = random.choice(kordaja)
-    b = random.choice(kordaja)
-
-    # votab python code vastavale vaartusele
-    sin_val = sin_map[lahendus_][1]
-    cos_val = cos_map[lahendus_][1]
-  
-   # teeb murrulise kordaja korral korrektse latex stringi
-    def murd_tex(kordaja, sin_v_cos):
-        if kordaja == 1: return sin_v_cos
-        elif kordaja == -1: return f"-{sin_v_cos}"
-        else:  # murd
-            murd = Fraction(kordaja).limit_denominator()
-            if murd.denominator == 1:
-               return f"{murd.numerator}{sin_v_cos}"  
-            else: # kontrollib kas lugeja on negatiivne
-              if murd.numerator < 0:
-                return rf"-\frac{{{-murd.numerator}}}{{{murd.denominator}}}{sin_v_cos}"
-              else: 
-                return rf"\frac{{{murd.numerator}}}{{{murd.denominator}}}{sin_v_cos}"
-              
-    # teisendab kraadid radiaanideks latex stringina
-    def nurk_radiaanides(kraadid):
-        if kraadid == 0:
-            return "0"
-        elif kraadid == 180:
-            return r"\pi"
-        else:
-            murd = Fraction(kraadid, 180)
-            if murd.numerator == 1:
-                return rf"\frac{{\pi}}{{{murd.denominator}}}"
-            else:
-                return rf"\frac{{{murd.numerator}\pi}}{{{murd.denominator}}}"
+    #juhuslik kordaja
+    kordaja = random.choice([1, 2, -1, -2, 3, -3, 1/2, -1/2, 3/2, -3/2, 4/3, -4/3, 1/3, -1/3, 1/4, -1/4])
     
-    nurk_tex = nurk_radiaanides(lahendus_)
-
-    # Vasaku poole loomine
-    liikmed_vasakul = []
-    if a != 0:
-        liikmed_vasakul.append(murd_tex(a, r'\sin(x)'))
-    if b != 0:
-        t = murd_tex(b, r'\cos(x)')
-        if t.startswith('-'):
-            liikmed_vasakul.append(t)
-        else:
-            liikmed_vasakul.append(f"+{t}")
+    #juhuslik funktsioon
+    trig_func = random.choice(["sin", "cos"])
     
-    vasak_pool = "".join(liikmed_vasakul)
-    if vasak_pool.startswith('+'):
-        vasak_pool = vasak_pool[1:] # + eemaldamine
+    if trig_func == "sin":
+        trig_latex_val, num, denom, irrational = sin_map[lahendus_]
+        trig_latex = r'\sin(x)'
+    else:
+        trig_latex_val, num, denom, irrational = cos_map[lahendus_]
+        trig_latex = r'\cos(x)'
     
-    # Parema poole loomine
-    liikmed_paremal = []
-    if a != 0:
-        liikmed_paremal.append(murd_tex(a, rf'\sin\left({nurk_tex}\right)'))
-    if b != 0:
-        t = murd_tex(b, rf'\cos\left({nurk_tex}\right)')
-        if t.startswith('-'):
-            liikmed_paremal.append(t)
-        else:
-            liikmed_paremal.append(f"+{t}")
-    
-    parem_pool = "".join(liikmed_paremal)
-    if parem_pool.startswith('+'):
-        parem_pool = parem_pool[1:]  # + eemaldamine
-    
-
-    vorrand = f"${vasak_pool} = {parem_pool}$"
-    vaartus = a * sin_val + b * cos_val
-    lahendus = []
-    #testib koiki voimalikke lahendusi
-    for nurk in voimalikud_lahendused:
-        test_sin = sin_map[nurk][1]
-        test_cos = cos_map[nurk][1]
-        test_value = a * test_sin + b * test_cos
+    # Teisendab kordaja LaTeX formaati koos trig funktsiooniga vasakul
+    def kordaja_latexiks(kordaja, trig):
+        murd = Fraction(kordaja).limit_denominator(100)
         
-        if abs(test_value - vaartus) < 1e-10:
-            lahendus.append(nurk)
-            
+        if murd.denominator == 1:
+            koef = int(murd.numerator)
+            if koef == 1:
+                return trig
+            elif koef == -1:
+                return f"-{trig}"
+            else:
+                return f"{koef}{trig}"
+        else:
+            if murd.numerator < 0:
+                return rf"-\frac{{{-murd.numerator}}}{{{murd.denominator}}}{trig}"
+            else:
+                return rf"\frac{{{murd.numerator}}}{{{murd.denominator}}}{trig}"
+    
+    # Korrutab kordaja ja trig väärtuse ning genereerib LaTeX kuju
+    def korda_ja_latexiks(kordaja, num, denom, irratsionaalarv):
+        kord_murd = Fraction(kordaja).limit_denominator(100)
+        
+        # Arvutab uue lugeja ja nimetaja
+        uus_lugeja = kord_murd.numerator * num
+        uus_nimetaja = kord_murd.denominator * denom
+        
+        # Lihtsutab murru
+        sük = math.gcd(abs(uus_lugeja), abs(uus_nimetaja))
+        uus_lugeja //= sük
+        uus_nimetaja //= sük
+        
+        # Genereeri LaTeX
+        if uus_nimetaja == 1:
+            if irratsionaalarv == '':
+                return str(uus_lugeja)
+            else:
+                sqrt_num = irratsionaalarv.split('sqrt(')[1].split(')')[0]
+                if uus_lugeja == 1:
+                    return f"\\sqrt{{{sqrt_num}}}"
+                elif uus_lugeja == -1:
+                    return f"-\\sqrt{{{sqrt_num}}}"
+                else:
+                    return f"{uus_lugeja}\\sqrt{{{sqrt_num}}}"
+        else:
+            if irratsionaalarv == '':
+                if uus_lugeja < 0:
+                    return rf"-\frac{{{-uus_lugeja}}}{{{uus_nimetaja}}}"
+                else:
+                    return rf"\frac{{{uus_lugeja}}}{{{uus_nimetaja}}}"
+            else:
+                sqrt_num = irratsionaalarv.split('sqrt(')[1].split(')')[0]
+                if uus_lugeja == 1:
+                    return rf"\frac{{\sqrt{{{sqrt_num}}}}}{{{uus_nimetaja}}}"
+                elif uus_lugeja == -1:
+                    return rf"-\frac{{\sqrt{{{sqrt_num}}}}}{{{uus_nimetaja}}}"
+                else:
+                    if uus_lugeja < 0:
+                        return rf"-\frac{{{-uus_lugeja}\sqrt{{{sqrt_num}}}}}{{{uus_nimetaja}}}"
+                    else:
+                        return rf"\frac{{{uus_lugeja}\sqrt{{{sqrt_num}}}}}{{{uus_nimetaja}}}"
+    
+    # Võrrandi koostamine
+    vasak_pool = kordaja_latexiks(kordaja, trig_latex)
+    parem_pool_tex = korda_ja_latexiks(kordaja, num, denom, irrational)
+    
+    vorrand = f"${vasak_pool} = {parem_pool_tex}$"
+    
+    # Leiab kõik lahendused voimalikud_lahendused hulgast
+    lahendus = []
+    
+    # Arvutab numbrilise väärtuse kontrollimiseks
+    if trig_func == "sin":
+        for nurk in voimalikud_lahendused:
+            _, test_num, test_denom, test_irr = sin_map[nurk]
+            if irrational == test_irr and num == test_num and denom == test_denom:
+                lahendus.append(nurk)
+    else:
+        for nurk in voimalikud_lahendused:
+            _, test_num, test_denom, test_irr = cos_map[nurk]
+            if irrational == test_irr and num == test_num and denom == test_denom:
+                lahendus.append(nurk)
+    
     return vorrand, lahendus
-
-
-def tuletis():
-    """
-    Genereerib juhusliku funktsiooni.
-    Tagastab:
-        (originaalfunktsioon(latex), lahendus(string))
-    """
-
-    funktsiooni_tuup = random.choice(["polünoom", "exp", "ln", "trig"])
-
-    #Vajalik selleks, et tagastaks 4 - 5, mitte 4 + -5 (latex)
-    def latex_term(kordaja, expr):
-        if kordaja == 0:
-            return ""
-        if kordaja > 0:
-            return f" + {kordaja}{expr}"
-        else:
-            return f" - {-kordaja}{expr}"
-
-    #(python)
-    def python_term(kordaja, expr):
-        if kordaja == 0:
-            return ""
-        if kordaja > 0:
-            return f" + {kordaja}*{expr}"
-        else:
-            return f" - {-kordaja}*{expr}"
-
-   #Polunoomi lahendus
-    if funktsiooni_tuup == "polünoom":
-        a = random.choice([i for i in range(-5, 6) if i != 0])
-        b = random.choice([i for i in range(-5, 6) if i != 0])
-        c = random.randint(-5, 5)
-
-        # LaTeX originaalfunktsioon
-        vorrand = f"$f(x) = {a}x^2{latex_term(b,'x')}{latex_term(c,'')}$"
-
-        # Python tuletisfunktsioon
-        lahendus = f"{2*a}*x{python_term(b,'1')}".strip()
-
-        return vorrand, lahendus
-
-    #Exponentsiaali lahendus  a * e^{kx}
-    if funktsiooni_tuup == "exp":
-        a = random.choice([i for i in range(-5, 6) if i != 0])
-        k = random.choice([i for i in range(-5, 6) if i != 0])
-
-        vorrand = f"$f(x) = {a}e^{{{k}x}}$"
-        lahendus = f"{a*k}*e**({k}*x)"
-
-        return vorrand, lahendus
-
-    #Logaritmi lahendus  a ln(x)
-    if funktsiooni_tuup == "ln":
-        a = random.choice([i for i in range(-5, 6) if i != 0])
-
-        vorrand = f"$f(x) = {a}\\ln(x)$"
-        lahendus = f"{a}/x"
-
-        return vorrand, lahendus
-
-    #Trigonomeetrilise lahendus  a*sin(kx) / a*cos(kx)
-    if funktsiooni_tuup == "trig":
-        a = random.choice([i for i in range(-5, 6) if i != 0])
-        k = random.choice([1, 2, 3, 4])
-        trig = random.choice(["sin", "cos"])
-
-        if trig == "sin":
-            vorrand = f"$f(x) = {a}\\sin({k}x)$"
-            lahendus = f"{a*k}*cos({k}*x)"
-        else:
-            vorrand = f"$f(x) = {a}\\cos({k}x)$"
-            lahendus = f"-{a*k}*sin({k}*x)"
-
-        return vorrand, lahendus

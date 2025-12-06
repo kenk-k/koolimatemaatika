@@ -242,43 +242,74 @@ def trigonomeetriline():
     return vorrand, lahendus
 
 def tuletis():
+    
     """
     Genereerib juhusliku funktsiooni.
     Tagastab:
         (originaalfunktsioon(latex), lahendus(string))
     """
+    def format_term(kordaja, valem, mode='latex'):
+          #teeb latex ja python formaadis stringi
+          if kordaja == 0:
+              if mode != 'both':
+                  return ""
+              else: return ("", "")
+
+          mark = " + " if kordaja > 0 else " - "
+          abs_kordaja = abs(kordaja)
+
+          # latex formaadis
+          if valem == "":          
+              latex_osa = f"{mark}{abs_kordaja}"
+          else:
+              if abs_kordaja == 1:
+                  latex_osa = f"{mark}{valem}"
+              else:
+                  latex_osa = f"{mark}{abs_kordaja}{valem}"
+
+          # python formaadis
+          if valem == "1":
+              python_osa = f"{mark}{abs_kordaja}"
+          else:
+              if abs_kordaja == 1:
+                  python_osa = f"{mark}{valem}" 
+              else:
+                  python_osa = f"{mark}{abs_kordaja}*{valem}"
+
+          if mode == 'latex':
+              return latex_osa
+          if mode == 'python':
+              return python_osa
+          return latex_osa, python_osa
 
     funktsiooni_tuup = random.choice(["polünoom", "exp", "ln", "trig"])
 
-    #Vajalik selleks, et tagastaks 4 - 5, mitte 4 + -5 (latex)
-    def latex_term(kordaja, expr):
-        if kordaja == 0:
-            return ""
-        if kordaja > 0:
-            return f" + {kordaja}{expr}"
-        else:
-            return f" - {-kordaja}{expr}"
-
-    #(python)
-    def python_term(kordaja, expr):
-        if kordaja == 0:
-            return ""
-        if kordaja > 0:
-            return f" + {kordaja}*{expr}"
-        else:
-            return f" - {-kordaja}*{expr}"
-
-   #Polunoomi lahendus
+    #Polunoomi lahendus
     if funktsiooni_tuup == "polünoom":
         a = random.choice([i for i in range(-5, 6) if i != 0])
         b = random.choice([i for i in range(-5, 6) if i != 0])
         c = random.randint(-5, 5)
 
+        if a == 1:
+            mark = "x^2"
+        elif a == -1:
+            mark = "-x^2"
+        else:
+            mark = f"{a}x^2"
+
         # LaTeX originaalfunktsioon
-        vorrand = f"$f(x) = {a}x^2{latex_term(b,'x')}{latex_term(c,'')}$"
+        vorrand = f"$f(x) = {mark}{format_term(b,'x','latex')}{format_term(c,'','latex')}$"
 
         # Python tuletisfunktsioon
-        lahendus = f"{2*a}*x{python_term(b,'1')}".strip()
+        kordaja = 2 * a
+        if kordaja == 1:
+            tuletise_mark = "x"
+        elif kordaja == -1:
+            tuletise_mark = "-x"
+        else:
+            tuletise_mark = f"{kordaja}*x"
+
+        lahendus = f"{tuletise_mark}{format_term(b,'1','python')}".strip()
 
         return vorrand, lahendus
 

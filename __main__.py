@@ -24,7 +24,7 @@ from random import randint
 
 import csv
 import os.path
-import os.makedirs
+import os
 import math
 import matplotlib
 import matplotlib.pyplot as plt

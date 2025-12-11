@@ -92,7 +92,7 @@ class Programm(tk.Tk):
         self.tiitelnupp_stiil.configure('Tiitel.TButton',font=('Arial',25))
         self.start_nupp = ttk.Button(self.tiitel_raam, text='Mängima!',
                                      style='Tiitel.TButton',
-                                     command=self.mang)
+                                     command=self.valikud)
         self.start_nupp.grid(column = 1, row = 1, sticky = 'n')
 
         self.juhised_nupp = ttk.Button(self.tiitel_raam,
@@ -112,6 +112,7 @@ class Programm(tk.Tk):
                                           style='Tiitel.TButton',
                                           command=self.tulemused)
         self.tulemused2_nupp.grid(column=0, row = 2, sticky = 'n')
+
     def juhised(self):
 
         """Teeb uue toplevel akna, kus on juhised.txt failist võetud
@@ -157,6 +158,42 @@ class Programm(tk.Tk):
                                              style='Juhised.TButton',
                                              command = self.juhised.destroy)
         self.juhised_kinni_nupp.grid(column = 0, row = 1)
+        
+    def valikud(self):
+        self.tiitel_raam.destroy()
+        self.valikute_raam = ttk.Frame(self)
+        self.valikute_raam.rowconfigure(0, weight = 1)
+        self.valikute_raam.rowconfigure(1, weight=1)
+        self.valikute_raam.rowconfigure(2, weight=1)
+        self.valikute_raam.rowconfigure(3, weight=1)
+        self.valikute_raam.rowconfigure(4, weight=1)
+        self.valikute_raam.columnconfigure(0, weight=1)
+        self.valikute_raam.grid(column=0, row=0, sticky='nsew')
+
+        self.info_label = ttk.Label(self.valikute_raam,
+                                    text='Tee mängurežiimi valik!',
+                                    font=20)
+        self.info_label.grid(row=0,column=0)
+
+        self.valik = tk.StringVar()
+        self.valik.set('20')
+        self.mang20st = ttk.Radiobutton(self.valikute_raam,
+                                        text='Mäng 20 küsimusega',
+                                        variable=self.valik,
+                                        value='20')
+        self.mangzen = ttk.Radiobutton(self.valikute_raam,
+                                       text='zen', variable=self.valik,
+                                       value='zen')
+        self.mangaeg = ttk.Radiobutton(self.valikute_raam,
+                                       text='aja peale', variable=self.valik,
+                                       value='aeg')
+        self.mang20st.grid(row=1,column=0)
+        self.mangzen.grid(row=2,column=0)
+        self.mangaeg.grid(row=3, column=0)
+
+        self.mangunupp = ttk.Button(self.valikute_raam, text='Mängima!',
+                                    command=self.mang)
+        self.mangunupp.grid(row = 4, column = 0)
         
     def mang(self):
 
@@ -207,9 +244,12 @@ class Programm(tk.Tk):
         self.vastamis_nupp.grid(column = 0, row = 2)
         
         #Näitab, mitmenda küsimuse peal kasutaja on
-        self.loendur = ttk.Label(self.mangu_raam,
-                                 text = f'{self.kysimuse_counter}/20')
-        self.loendur.grid(column = 0, row = 3)
+        if self.valik.get() == '20':
+            self.loendur = ttk.Label(self.mangu_raam,
+                                    text = f'{self.kysimuse_counter}/20')
+            self.loendur.grid(column = 0, row = 3)
+        elif self.valik.get() == 'aeg':
+            pass
 
         #Näitab, kui kasutaja on sisestanud midagi valesti, näitab
         #ka, kas vastus oli õige/vale
@@ -224,9 +264,7 @@ class Programm(tk.Tk):
         """valib suvaliselt ühte tüüpi võrrandi ja
            salvestab võrrandi latexi sõne ja vastused
            mängu jaoks muutujatesse"""
-        #TODO: rohkem võrrandeid mängu
-        self.vorrandi_number = randint(1,5)
-        #self.vorrandi_number = 2
+        self.vorrandi_number = randint(1,6)
         match self.vorrandi_number:
             case 1:
                 self.vorrand, self.lahendus = fun.lineaar()
@@ -238,8 +276,8 @@ class Programm(tk.Tk):
                 self.vorrand, self.lahendus = fun.logaritm()
             case 5:
                 self.vorrand, self.lahendus = fun.trigonomeetriline()
-            #case 6: 
-            #    self.vorrand, self.lahendus = fun.tuletis()
+            case 6: 
+                self.vorrand, self.lahendus = fun.tuletis()
     
     def kontrolli(self, event=None):
         """Kontrollib vastust, mis kasutaja sisestas ja 
@@ -351,22 +389,40 @@ class Programm(tk.Tk):
         #vastava lahenduse
         self.uus_funktsioon()
         
-        self.kysimuse_counter += 1
         #Lõpetab mängu, kui 20 küsimust on vastatud
-        if self.kysimuse_counter == 20:
-            self.lopp()
+        if self.valik.get() == '20':
+            if self.kysimuse_counter == 20:
+                self.lopp()
+            else:
+                self.kysimuse_counter += 1
+                #Puhastab figuuri ja kirjutab uue võrrandi figuurile
+                self.figuur.clear()
+                self.figuur.text(0.5, 0.5, self.vorrand,
+                                horizontalalignment = 'center',
+                                verticalalignment = 'center',
+                                fontsize = 20)
+                self.latex.draw()
+                #uuendab loendurit
+                self.loendur.configure(text = f'{self.kysimuse_counter}/20')
+                #kustutab kasutaja eelmise sisestuse
+                self.vastuse_kast.delete(0, 'end')
+        elif self.valik.get() == 'zen':
+            if self.oiged != self.kysimuse_counter:
+                self.lopp()
+            else:
+                self.kysimuse_counter += 1
+                #Puhastab figuuri ja kirjutab uue võrrandi figuurile
+                self.figuur.clear()
+                self.figuur.text(0.5, 0.5, self.vorrand,
+                                horizontalalignment = 'center',
+                                verticalalignment = 'center',
+                                fontsize = 20)
+                self.latex.draw()
+                #kustutab kasutaja eelmise sisestuse
+                self.vastuse_kast.delete(0, 'end')
         else:
-            #Puhastab figuuri ja kirjutab uue võrrandi figuurile
-            self.figuur.clear()
-            self.figuur.text(0.5, 0.5, self.vorrand,
-                             horizontalalignment = 'center',
-                             verticalalignment = 'center',
-                             fontsize = 20)
-            self.latex.draw()
-            #uuendab loendurit
-            self.loendur.configure(text = f'{self.kysimuse_counter}/20')
-            #kustutab kasutaja eelmise sisestuse
-            self.vastuse_kast.delete(0, 'end')
+            pass
+        
 
     def lopp(self):
 
@@ -386,9 +442,14 @@ class Programm(tk.Tk):
         self.lopp_raam.columnconfigure(2, weight = 1)
         self.lopp_raam.rowconfigure(0, weight = 3)
         self.lopp_raam.rowconfigure(1, weight = 1)
-        self.tulemus = ttk.Label(self.lopp_raam,
-                                 text = f'Sinu tulemus on {self.oiged}/20.',
-                                 font = ('Arial', 30))
+        if self.valik.get() == '20':
+            self.tulemus = ttk.Label(self.lopp_raam,
+                                    text = f'Sinu tulemus on {self.oiged}/20.',
+                                    font = ('Arial', 30))
+        else:
+            self.tulemus = ttk.Label(self.lopp_raam,
+                                     text=f'Vastasid {self.oiged} küsimust õigesti.',
+                                     font = ('Arial', 30))
         self.tulemus.grid(column = 0, row = 0, columnspan = 2)
         #Nupp, millega saab minna tiitellehele ja mängu uuesti alustada
         self.uuesti_nupp = ttk.Button(self.lopp_raam,
@@ -442,12 +503,21 @@ class Programm(tk.Tk):
         self.tulemused_20st.rowconfigure(0, weight=1)
         self.tulemused_20st.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
+        self.tulemused_zen = ttk.Frame(self.tulemuste_notebook)
+        self.tulemused_zen.grid(row=0, column=0, sticky='nsew')
+        self.tulemused_zen.rowconfigure(0, weight=1)
+        self.tulemused_zen.columnconfigure(0, weight=1)
+        self.tulemuste_notebook.add(self.tulemused_zen, text='zen')
         self.tulemuste_tekst = tk.StringVar()
-        
+        self.tulemused_zen_tekst = tk.StringVar()
         if not os.path.exists('tulemused/'):
             os.makedirs('tulemused/')
         if not os.path.exists('tulemused/tulemused-20st.csv'):
             with open('tulemused/tulemused-20st.csv','w',
+                      encoding='utf-8') as fail:
+                pass
+        if not os.path.exists('tulemused/tulemused-zen.csv'):
+            with open('tulemused/tulemused-zen.csv', 'w',
                       encoding='utf-8') as fail:
                 pass
         with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
@@ -456,10 +526,30 @@ class Programm(tk.Tk):
                 rida_oige = ' - '.join(rida)
                 self.tulemuste_tekst.set(self.tulemuste_tekst.get() +
                                          rida_oige + '/20-st\n')
-        self.tulemuste_label = ttk.Label(self.tulemused_20st,
-                                         text = self.tulemuste_tekst.get(),
-                                         anchor='center')
+        if self.tulemuste_tekst != '':
+            self.tulemuste_label = ttk.Label(self.tulemused_20st,
+                                            text = self.tulemuste_tekst.get(),
+                                            anchor='center')
+        else:
+            self.tulemuste_label = ttk.Label(self.tulemused_20st,
+                                            text = 'Tulemusi veel pole',
+                                            anchor='center')
         self.tulemuste_label.grid(row=0, column=0, sticky='nsew')
+        with open('tulemused/tulemused-zen.csv', encoding='utf-8') as tz_fail:
+            csv_lugeja = csv.reader(tz_fail)
+            for rida in csv_lugeja:
+                rida_oige = ' - '.join(rida)
+                self.tulemused_zen_tekst.set(self.tulemused_zen_tekst.get() +
+                                         rida_oige + ' õiget vastust\n')
+        if self.tulemused_zen_tekst.get() != '':
+            self.tulemused_zen_label = ttk.Label(self.tulemused_zen,
+                                                 text=self.tulemused_zen_tekst.get(),
+                                                 anchor='center')
+        else:
+            self.tulemused_zen_label = ttk.Label(self.tulemused_zen,
+                                                 text='Tulemusi veel pole',
+                                                 anchor='center')
+        self.tulemused_zen_label.grid(row=0, column=0, sticky='nsew')
         if self.tiitel_raam.winfo_exists() == 1:
             self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
                                         command=self.tulemuste_aken.destroy)
@@ -502,9 +592,16 @@ class Programm(tk.Tk):
                                               command=self.lisamise_aken.destroy)
         self.tagasi_nupp_tulemus.grid(row=1,column=1)
     def lisa_tulemus(self):
-        with open('tulemused/tulemused-20st.csv', 'a', encoding='utf-8') as t_fail:
-            csv_kirjutaja = csv.writer(t_fail)
-            csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
+        if self.valik.get() == '20':
+            with open('tulemused/tulemused-20st.csv', 'a',
+                      encoding='utf-8') as t_fail:
+                csv_kirjutaja = csv.writer(t_fail)
+                csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
+        elif self.valik.get() == 'zen':
+            with open('tulemused/tulemused-zen.csv', 'a',
+                      encoding='utf-8') as tz_fail:
+                csv_kirjutaja = csv.writer(tz_fail)
+                csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
         self.tulemuste_aken.destroy()
         self.tulemused()
 

@@ -23,7 +23,7 @@ from tkinter import ttk
 from random import randint
 
 import csv
-
+import math
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -265,18 +265,85 @@ class Programm(tk.Tk):
             else:
                 self.sisestuse_info.configure(text='Vale vastus!')
         else:
-            #kui kasutaja sisestas midagi muud peale täisarvu,
-            #ütleb programmis sellest kasutajale
-            try:
-                self.vastuse_number = int(self.vastus)
-            except ValueError:
-                self.sisestuse_info.configure(text='Sisesta vastus täisarvuna')
-                return None
-            if int(self.vastus) == self.lahendus:
-                self.oiged += 1
-                self.sisestuse_info.configure(text='Õige vastus!')
+            # Tuletisfunktsiooni puhul peab lubama python fromaadis valemit
+            if self.vorrandi_number == 6:
+                # konverdib ^ -> **
+                user_expr = self.vastus.strip().replace('^', '**')
+                expected_expr = self.lahendus  # fun.tuletis() tagastatud valem
+
+                #eval funktsioon
+                safe_globals = {
+                    '__builtins__': None,
+                    'sin': math.sin,
+                    'cos': math.cos,
+                    'tan': math.tan,
+                    'sqrt': math.sqrt,
+                    'pi': math.pi,
+                    'e': math.e,
+                    'exp': math.exp,
+                    'log': math.log,
+                    'abs': abs,
+                    'pow': pow
+                }
+
+                def safe_eval(expr, x):
+                    # Eval funktsioon, mis hindab valemit
+                    return eval(expr, safe_globals, {'x': x})
+
+                # Kontrollib valemit mitme erineva x väärtusega
+                sample_x = [0.3, 0.7, 1.3, 2.5, -1.2]
+                tol = 1e-6
+                try:
+                    correct = True
+                    for xv in sample_x:
+                        ev_expected = safe_eval(expected_expr, xv)
+                        ev_user = safe_eval(user_expr, xv)
+                        #mittetäisarvuliste väärtuste kontroll
+                        if not (isinstance(ev_expected, (int, float)) and isinstance(ev_user, (int, float))):
+                            correct = False
+                            break
+                        if math.isfinite(ev_expected) and math.isfinite(ev_user):
+                            if abs(ev_expected - ev_user) > tol:
+                                correct = False
+                                break
+                        else:
+                            correct = False
+                            break
+                except Exception:
+                    self.sisestuse_info.configure(
+                        text='Vigane funktsioon. Kasuta Python-süntaksit (nt 2*x, sin(x), e**(x)).'
+                    )
+                    return None
+
+                if correct:
+                    self.oiged += 1
+                    self.sisestuse_info.configure(text='Õige vastus!')
+                else:
+                    self.sisestuse_info.configure(text='Vale vastus!')
             else:
-                self.sisestuse_info.configure(text='Vale vastus!')
+                #kui kasutaja sisestas midagi muud peale täisarvu,
+                #ütleb programmis sellest kasutajale
+                try:
+                    self.vastuse_number = int(self.vastus)
+                except ValueError:
+                    self.sisestuse_info.configure(text='Sisesta vastus täisarvuna')
+                    return None
+                
+                # Kontrollib, kas lahendus on list (trigonomeetriline) või üksik väärtus
+                if isinstance(self.lahendus, list):
+                    # Trigonomeetrilise võrrandi puhul peab vastus olema üks lahendustest
+                    if int(self.vastus) in self.lahendus:
+                        self.oiged += 1
+                        self.sisestuse_info.configure(text='Õige vastus!')
+                    else:
+                        self.sisestuse_info.configure(text='Vale vastus!')
+                else:
+                    # Teiste võrrandite puhul on tavaline võrdlus
+                    if int(self.vastus) == self.lahendus:
+                        self.oiged += 1
+                        self.sisestuse_info.configure(text='Õige vastus!')
+                    else:
+                        self.sisestuse_info.configure(text='Vale vastus!')
 
         #genereerib uuesti suvalise võrrandi ja sellele
         #vastava lahenduse

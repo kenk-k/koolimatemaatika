@@ -151,11 +151,13 @@ def trigonomeetriline():
     trig_func = random.choice(["sin", "cos"])
     
     if trig_func == "sin":
-        trig_latex_val, num, denom, irrational = sin_map[lahendus_]
+        trig_latex_val, lugeja, nimetaja, irrationaal = sin_map[lahendus_]
         trig_latex = r'\sin(x)'
+        trig_map = sin_map
     else:
-        trig_latex_val, num, denom, irrational = cos_map[lahendus_]
+        trig_latex_val, lugeja, nimetaja, irrationaal = cos_map[lahendus_]
         trig_latex = r'\cos(x)'
+        trig_map = cos_map
     
     # Teisendab kordaja LaTeX formaati koos trig funktsiooniga vasakul
     def kordaja_latexiks(kordaja, trig):
@@ -176,14 +178,14 @@ def trigonomeetriline():
                 return rf"\frac{{{murd.numerator}}}{{{murd.denominator}}}{trig}"
     
     # Korrutab kordaja ja trig väärtuse ning genereerib LaTeX kuju
-    def korda_ja_latexiks(kordaja, num, denom, irratsionaalarv):
+    def korda_ja_latexiks(kordaja, nim, lug, irratsionaalarv):
         kord_murd = Fraction(kordaja).limit_denominator(100)
         
         # Arvutab uue lugeja ja nimetaja
-        uus_lugeja = kord_murd.numerator * num
-        uus_nimetaja = kord_murd.denominator * denom
+        uus_lugeja = kord_murd.numerator * nim
+        uus_nimetaja = kord_murd.denominator * lug
         
-        # Lihtsutab murru
+        # Lihtsustab murru
         sük = math.gcd(abs(uus_lugeja), abs(uus_nimetaja))
         uus_lugeja //= sük
         uus_nimetaja //= sük
@@ -220,23 +222,123 @@ def trigonomeetriline():
     
     # Võrrandi koostamine
     vasak_pool = kordaja_latexiks(kordaja, trig_latex)
-    parem_pool_tex = korda_ja_latexiks(kordaja, num, denom, irrational)
+    parem_pool_tex = korda_ja_latexiks(kordaja, lugeja, nimetaja, irrationaal)
     
     vorrand = f"${vasak_pool} = {parem_pool_tex}$"
     
-    # Leiab kõik lahendused voimalikud_lahendused hulgast
+    # Leiab KÕIK lahendused voimalikud_lahendused hulgast, mille trig väärtus vastab
     lahendus = []
     
-    # Arvutab numbrilise väärtuse kontrollimiseks
-    if trig_func == "sin":
-        for nurk in voimalikud_lahendused:
-            _, test_num, test_denom, test_irr = sin_map[nurk]
-            if irrational == test_irr and num == test_num and denom == test_denom:
-                lahendus.append(nurk)
-    else:
-        for nurk in voimalikud_lahendused:
-            _, test_num, test_denom, test_irr = cos_map[nurk]
-            if irrational == test_irr and num == test_num and denom == test_denom:
-                lahendus.append(nurk)
+    for nurk in voimalikud_lahendused:
+        _, test_lugeja, test_nimetaja, test_irr = trig_map[nurk]
+        # Kontrollib, kas trig väärtus (lugeja, nimetaja, irratsionaalarv) on sama
+        if test_irr == irrationaal and test_lugeja == lugeja and test_nimetaja == nimetaja:
+            lahendus.append(nurk)
     
     return vorrand, lahendus
+
+def tuletis():
+    
+    """
+    Genereerib juhusliku funktsiooni.
+    Tagastab:
+        (originaalfunktsioon(latex), lahendus(string))
+    """
+    def format_term(kordaja, valem, mode='latex'):
+          #teeb latex ja python formaadis stringi
+          if kordaja == 0:
+              if mode != 'both':
+                  return ""
+              else: return ("", "")
+
+          mark = " + " if kordaja > 0 else " - "
+          abs_kordaja = abs(kordaja)
+
+          # latex formaadis
+          if valem == "":          
+              latex_osa = f"{mark}{abs_kordaja}"
+          else:
+              if abs_kordaja == 1:
+                  latex_osa = f"{mark}{valem}"
+              else:
+                  latex_osa = f"{mark}{abs_kordaja}{valem}"
+
+          # python formaadis
+          if valem == "1":
+              python_osa = f"{mark}{abs_kordaja}"
+          else:
+              if abs_kordaja == 1:
+                  python_osa = f"{mark}{valem}" 
+              else:
+                  python_osa = f"{mark}{abs_kordaja}*{valem}"
+
+          if mode == 'latex':
+              return latex_osa
+          if mode == 'python':
+              return python_osa
+          return latex_osa, python_osa
+
+    funktsiooni_tuup = random.choice(["polünoom", "exp", "ln", "trig"])
+
+    #Polunoomi lahendus
+    if funktsiooni_tuup == "polünoom":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        b = random.choice([i for i in range(-5, 6) if i != 0])
+        c = random.randint(-5, 5)
+
+        if a == 1:
+            mark = "x^2"
+        elif a == -1:
+            mark = "-x^2"
+        else:
+            mark = f"{a}x^2"
+
+        # LaTeX originaalfunktsioon
+        vorrand = f"$f(x) = {mark}{format_term(b,'x','latex')}{format_term(c,'','latex')}$"
+
+        # Python tuletisfunktsioon
+        kordaja = 2 * a
+        if kordaja == 1:
+            tuletise_mark = "x"
+        elif kordaja == -1:
+            tuletise_mark = "-x"
+        else:
+            tuletise_mark = f"{kordaja}*x"
+
+        lahendus = f"{tuletise_mark}{format_term(b,'1','python')}".strip()
+
+        return vorrand, lahendus
+
+    #Exponentsiaali lahendus  a * e^{kx}
+    if funktsiooni_tuup == "exp":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        k = random.choice([i for i in range(-5, 6) if i != 0])
+
+        vorrand = f"$f(x) = {a}e^{{{k}x}}$"
+        lahendus = f"{a*k}*e**({k}*x)"
+
+        return vorrand, lahendus
+
+    #Logaritmi lahendus  a ln(x)
+    if funktsiooni_tuup == "ln":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+
+        vorrand = f"$f(x) = {a}\\ln(x)$"
+        lahendus = f"{a}/x"
+
+        return vorrand, lahendus
+
+    #Trigonomeetrilise lahendus  a*sin(kx) / a*cos(kx)
+    if funktsiooni_tuup == "trig":
+        a = random.choice([i for i in range(-5, 6) if i != 0])
+        k = random.choice([1, 2, 3, 4])
+        trig = random.choice(["sin", "cos"])
+
+        if trig == "sin":
+            vorrand = f"$f(x) = {a}\\sin({k}x)$"
+            lahendus = f"{a*k}*cos({k}*x)"
+        else:
+            vorrand = f"$f(x) = {a}\\cos({k}x)$"
+            lahendus = f"-{a*k}*sin({k}*x)"
+
+        return vorrand, lahendus

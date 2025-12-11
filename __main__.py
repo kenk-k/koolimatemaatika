@@ -23,6 +23,7 @@ from tkinter import ttk
 from random import randint
 
 import csv
+import os.path
 import math
 import matplotlib
 import matplotlib.pyplot as plt
@@ -441,6 +442,10 @@ class Programm(tk.Tk):
         self.tulemused_20st.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
         self.tulemuste_tekst = tk.StringVar()
+        if not os.path.exists('tulemused/tulemused-20st.csv'):
+            with open('tulemused/tulemused-20st.csv','w',
+                      encoding=utf-8) as fail:
+                pass
         with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
             csv_lugeja = csv.reader(t_fail)
             for rida in csv_lugeja:

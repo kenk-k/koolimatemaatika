@@ -223,7 +223,7 @@ class Programm(tk.Tk):
            salvestab võrrandi latexi sõne ja vastused
            mängu jaoks muutujatesse"""
         #TODO: rohkem võrrandeid mängu
-        self.vorrandi_number = randint(1,6)
+        self.vorrandi_number = randint(1,5)
         #self.vorrandi_number = 2
         match self.vorrandi_number:
             case 1:
@@ -236,8 +236,8 @@ class Programm(tk.Tk):
                 self.vorrand, self.lahendus = fun.logaritm()
             case 5:
                 self.vorrand, self.lahendus = fun.trigonomeetriline()
-            case 6: 
-                self.vorrand, self.lahendus = fun.tuletis()
+            #case 6: 
+            #    self.vorrand, self.lahendus = fun.tuletis()
     
     def kontrolli(self, event=None):
         """Kontrollib vastust, mis kasutaja sisestas ja 
@@ -356,7 +356,8 @@ class Programm(tk.Tk):
         self.tulemuste_aken.rowconfigure(0, weight = 1)
         self.tulemuste_aken.columnconfigure(0, weight = 1)
         self.tulemuste_aken.title('Tulemused')
-        self.tulemuste_raam = ttk.Frame(self.tulemuste_aken, style='Raam.TFrame')
+        self.tulemuste_raam = ttk.Frame(self.tulemuste_aken,
+                                        style='Raam.TFrame')
         self.tulemuste_raam.grid(column=0, row=0, sticky='nsew')
         self.tulemuste_raam.rowconfigure(0, weight = 2)
         self.tulemuste_raam.rowconfigure(1, weight=1)
@@ -368,20 +369,68 @@ class Programm(tk.Tk):
         self.tulemuste_notebook.grid(column=0, row=0, columnspan=2,
                                      sticky='nsew')
         self.tulemused_20st = ttk.Frame(self.tulemuste_notebook)
+        self.tulemused_20st.grid(row=0, column=0, sticky='nsew')
+        self.tulemused_20st.rowconfigure(0, weight=1)
+        self.tulemused_20st.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
+        self.tulemuste_tekst = tk.StringVar()
         with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
             csv_lugeja = csv.reader(t_fail)
-            csv
-        self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
-                                      command=self.tulemuste_aken.destroy)
-        self.tagasi_nupp.grid(column = 0, row = 1)
-        self.uus_tulemus_nupp = ttk.Button(self.tulemuste_raam,
-                                           text='Uus tulemus',
-                                           command=self.uus_tulemus)
-        self.uus_tulemus_nupp.grid(column=1, row=1)
+            for rida in csv_lugeja:
+                rida_oige = ' - '.join(rida)
+                self.tulemuste_tekst.set(self.tulemuste_tekst.get() +
+                                         rida_oige + '/20-st\n')
+        self.tulemuste_label = ttk.Label(self.tulemused_20st,
+                                         text = self.tulemuste_tekst.get(),
+                                         anchor='center')
+        self.tulemuste_label.grid(row=0, column=0, sticky='nsew')
+        if self.tiitel_raam.winfo_exists() == 1:
+            self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
+                                        command=self.tulemuste_aken.destroy)
+            self.tagasi_nupp.grid(column = 0, row = 1, columnspan=2)
+        else:
+            self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
+                                        command=self.tulemuste_aken.destroy)
+            self.tagasi_nupp.grid(column = 0, row = 1)
+            self.uus_tulemus_nupp = ttk.Button(self.tulemuste_raam,
+                                            text='Uus tulemus',
+                                            command=self.uus_tulemus)
+            self.uus_tulemus_nupp.grid(column=1, row=1)
 
-        def uus_tulemus(self):
-            pass
+    def uus_tulemus(self):
+        self.lisamise_aken = tk.Toplevel(self.tulemuste_aken)
+        self.lisamise_aken.rowconfigure(0)
+        self.lisamise_aken.columnconfigure(0)
+        self.lisamise_raam = ttk.Frame(self.lisamise_aken)
+        self.lisamise_raam.grid(row=0, column=0)
+        self.lisamise_raam.rowconfigure(0, weight=1)
+        self.lisamise_raam.rowconfigure(1, weight=1)
+        self.lisamise_raam.rowconfigure(2, weight=1)
+        self.lisamise_raam.columnconfigure(0, weight=1)
+
+        self.nime_text = ttk.Label(self.lisamise_raam,
+                                    text='Sisesta oma nimi:')
+        self.nime_text.grid(row = 0, column = 0)
+        
+        self.nimi = tk.StringVar()
+        self.nime_kast = ttk.Entry(self.lisamise_raam,
+                                    textvariable=self.nimi)
+        self.nime_kast.grid(row = 1, column = 0)
+
+        self.sisestus_nupp = ttk.Button(self.lisamise_raam,
+                                        text='Sisesta tulemus',
+                                        command=self.lisa_tulemus)
+        self.sisestus_nupp.grid(row=0,column=1)
+        self.tagasi_nupp_tulemus = ttk.Button(self.lisamise_raam,
+                                              text='Tagasi',
+                                              command=self.lisamise_aken.destroy)
+        self.tagasi_nupp_tulemus.grid(row=1,column=1)
+    def lisa_tulemus(self):
+        with open('tulemused/tulemused-20st.csv', 'a', encoding='utf-8') as t_fail:
+            csv_kirjutaja = csv.writer(t_fail)
+            csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
+        self.tulemuste_aken.destroy()
+        self.tulemused()
 
 if __name__ == '__main__':
     main()

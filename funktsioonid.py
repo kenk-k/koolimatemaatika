@@ -111,10 +111,6 @@ def logaritm():
              + str(baas) + '}x = ' + str(parem_pool) + '$')
   return vorrand, lahendus
 
-#TODO: lisada ln-ile funktsioon
-
-
-
 def trigonomeetriline():
     """Genereerib lihtsustatud trigonomeetrilise võrrandi LaTeX-is.
        Kujul: a*sin(x) = constant või a*cos(x) = constant

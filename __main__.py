@@ -443,8 +443,10 @@ class Programm(tk.Tk):
         self.tulemused_20st.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
         self.tulemuste_tekst = tk.StringVar()
+        
+        if not os.path.exists('tulemused/'):
+            os.makedirs('tulemused/')
         if not os.path.exists('tulemused/tulemused-20st.csv'):
-            os.makedirs(tulemused)
             with open('tulemused/tulemused-20st.csv','w',
                       encoding='utf-8') as fail:
                 pass

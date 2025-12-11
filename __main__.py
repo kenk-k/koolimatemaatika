@@ -24,6 +24,7 @@ from random import randint
 
 import csv
 import os.path
+import os.makedirs
 import math
 import matplotlib
 import matplotlib.pyplot as plt
@@ -443,6 +444,7 @@ class Programm(tk.Tk):
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
         self.tulemuste_tekst = tk.StringVar()
         if not os.path.exists('tulemused/tulemused-20st.csv'):
+            os.makedirs(tulemused)
             with open('tulemused/tulemused-20st.csv','w',
                       encoding='utf-8') as fail:
                 pass

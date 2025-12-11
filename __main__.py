@@ -444,7 +444,7 @@ class Programm(tk.Tk):
         self.tulemuste_tekst = tk.StringVar()
         if not os.path.exists('tulemused/tulemused-20st.csv'):
             with open('tulemused/tulemused-20st.csv','w',
-                      encoding=utf-8) as fail:
+                      encoding='utf-8') as fail:
                 pass
         with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
             csv_lugeja = csv.reader(t_fail)

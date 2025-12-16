@@ -7,7 +7,7 @@ Vajalik programmi tööks: matplotlib, pythoni versioon vähemalt 3.10
 
 Käivitamise juhend: installida kas läbi pipi või thonny matplotlib
 ja tkinter, seejärel kas terminalis või läbi koodiredaktori
-käivitada __main__.py.
+käivitada main.py.
 
 Inspiratsioon: Programm on kergelt inspireeritud pranglimisest.
 taimeri implementatsiooniga aitas:
@@ -58,6 +58,16 @@ class Programm(tk.Tk):
         self.kysimuse_counter = 1
         self.oiged = 0
 
+        self.taustavarv = '#fafafa'
+        self.taustavarv2 = '#ffffff'
+        self.border_varv = '#e0e0e0'
+        self.tekst1 = '#1a1a1a'
+        self.tekst2 = '#666666'
+        self.tume = '#2a2a2a'
+        self.oige = '#f5f5f5'
+
+        self.configure(bg=self.taustavarv)
+
         self.title('Matemaatika mäng')
         #Võtab ekraani suuruse arvesse, et mängu aken oleks sama suur
         #nii madala kui kõrge resolutsiooniga monitoridel.
@@ -68,53 +78,96 @@ class Programm(tk.Tk):
         #Raamid suurendavad end automaatselt akent suurendades
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
+        self.stiil()
         self.tiitel()
+
+    def stiil(self):
+        self.stiil = ttk.Style()
+        self.stiil.theme_use('clam')
+
+        self.stiil.configure('Main.TFrame', bg=self.taustavarv)
+
+        self.stiil.configure('Tiitel.TLabel',
+                             #background=self.taustavarv,
+                             foreground=self.tekst1,
+                             font=('Verdana', 42))
         
+        self.stiil.configure('Lugeja.TLabel',
+                             #background=self.taustavarv,
+                             foreground=self.tekst2,
+                             font=('Verdana', 13))
+        
+        self.stiil.configure('Tulemus.TLabel',
+                             #background=self.taustavarv,
+                             foreground=self.tekst2,
+                             font=('Verdana', 14))
+        
+        self.stiil.configure('Nupp1.TButton',
+                       background=self.tume,
+                       foreground='white',
+                       font=('Verdana', 14),
+                       borderwidth=0,
+                       focuscolor='none',
+                       padding=(20, 12))
+        
+        self.stiil.map('Nupp1.TButton',
+                 background=[('active', '#3a3a3a'),
+                            ('pressed', '#1a1a1a')])
+        
+        self.stiil.configure('Nupp2.TButton',
+                       background=self.taustavarv,
+                       foreground=self.tekst1,
+                       font=('Verdana', 14),
+                       borderwidth=1,
+                       focuscolor='none',
+                       padding=(20, 12))
+        
+        self.stiil.map('Nupp2.TButton',
+                 background=[('active', '#f5f5f5')],
+                 bordercolor=[('active', '#d0d0d0')])
+
+        
+
     def tiitel(self):
 
         """Teeb tiitli raami ja selle sees olevad aknad."""
-        self.tiitel_raam = ttk.Frame(self)
-        #Raamis on 2 rida ja 3 veergu.
-        self.tiitel_raam.rowconfigure(0, weight=2)
-        self.tiitel_raam.rowconfigure(1, weight=1)
+        self.tiitel_raam = ttk.Frame(self, style='Main.TFrame')
+        #Raamis on 1 rida ja 4 veergu.
+        self.tiitel_raam.rowconfigure(0, weight=3)
+        for i in range(1,5):
+            self.tiitel_raam.rowconfigure(i, weight=1)
         self.tiitel_raam.columnconfigure(1, weight=1)
-        self.tiitel_raam.columnconfigure(2, weight=1)
-        self.tiitel_raam.columnconfigure(3, weight=1)
         self.tiitel_raam.grid(column = 0, row = 0,
                               sticky = 'nsew')
 
         self.tiitel_nimi = ttk.Label(self.tiitel_raam,
-                                     anchor='center',
-                                     font=('Arial', 40),
-                                     text = 'Matemaatika mäng')
-        self.tiitel_nimi.grid(column = 1, row = 0, columnspan=3,
-                              sticky = 'nsew')
+                                     style='Tiitel.TLabel',
+                                     text='Matemaatika mäng',
+                                     anchor='center')
+        self.tiitel_nimi.grid(column = 1, row = 0, sticky = 'nsew')
 
-        #Sätib tiitellehe nuppude fondi ja suuruse.
-        self.tiitelnupp_stiil = ttk.Style()
-        self.tiitelnupp_stiil.configure('Tiitel.TButton',font=('Arial',25))
         self.start_nupp = ttk.Button(self.tiitel_raam, text='Mängima!',
-                                     style='Tiitel.TButton',
+                                     style='Nupp1.TButton',
                                      command=self.valikud)
-        self.start_nupp.grid(column = 1, row = 1, sticky = 'n')
+        self.start_nupp.grid(column = 1, row = 1, padx = 240, sticky = 'we')
 
         self.juhised_nupp = ttk.Button(self.tiitel_raam,
                                        text = 'Juhised',
-                                       style='Tiitel.TButton',
+                                       style='Nupp1.TButton',
                                        command=self.juhised)
-        self.juhised_nupp.grid(column = 2, row = 1, sticky = 'n')
+        self.juhised_nupp.grid(column = 1, row = 2, padx = 240, sticky = 'we')
         
         self.kinni_nupp = ttk.Button(self.tiitel_raam,
                                      text='Sulge',
-                                     style='Tiitel.TButton',
+                                     style='Nupp1.TButton',
                                      command=self.destroy)
-        self.kinni_nupp.grid(column=3, row=1, sticky = 'n')
+        self.kinni_nupp.grid(column=1, row=4, padx = 240, sticky = 'we')
         
         self.tulemused2_nupp = ttk.Button(self.tiitel_raam,
                                           text='Tulemused',
-                                          style='Tiitel.TButton',
+                                          style='Nupp1.TButton',
                                           command=self.tulemused)
-        self.tulemused2_nupp.grid(column=0, row = 2, sticky = 'n')
+        self.tulemused2_nupp.grid(column=1, row = 3, padx = 240, sticky = 'we')
 
     def juhised(self):
 
@@ -131,52 +184,51 @@ class Programm(tk.Tk):
         self.juhised.geometry(f'{round(self.ekraani_laius/2)}x'
                               + f'{round(self.ekraani_korgus/2)}')
 
-        self.juhiste_raam = ttk.Frame(self.juhised)
+        self.juhiste_raam = ttk.Frame(self.juhised, style='Main.TFrame')
         self.juhiste_raam.grid(column = 0, row = 0,
                                sticky = 'nsew')
         #Teksti rida on 3 korda suurem kui tagasinupu rida                       
-        self.juhiste_raam.rowconfigure(0, weight = 3)
-        self.juhiste_raam.rowconfigure(1, weight = 1)
+        self.juhiste_raam.rowconfigure(0, weight = 1)
+        self.juhiste_raam.rowconfigure(1, weight=3)
+        self.juhiste_raam.rowconfigure(2, weight = 1)
 
         self.juhiste_raam.columnconfigure(0, weight=1)
 
         self.juhised_tiitel = ttk.Label(self.juhiste_raam,
                                         text = 'Sisestuse juhised',
-                                        width = 50, font = 44)
+                                        style='Tiitel.TLabel')
         self.juhised_tiitel.grid(column = 0, row = 0)
 
         #Juhiste tekst tuleb failist juhised.txt, kuna siia kirjutamine
         #võtab liiga palju ruumi
-        self.juhisetekstifail = open('juhised.txt', encoding='utf-8')
-        self.juhised_text = ttk.Label(self.juhiste_raam, justify='center',
-                                      text = self.juhisetekstifail.read(),
-                                      font=('Arial', 16))
-        self.juhised_text.grid(column = 0, row = 0, sticky= 'ns')
-        self.juhisetekstifail.close()
+        with open('juhised.txt', encoding='utf-8') as juhised_fail:
+            self.juhised_text = ttk.Label(self.juhiste_raam, justify='center',
+                                        text = juhised_fail.read(),
+                                        style='Tulemus.TLabel',
+                                        anchor='center')
+        self.juhised_text.grid(column = 0, row = 1, sticky= 'nsew')
 
-        self.juhiste_nupp_stiil = ttk.Style()
-        self.juhiste_nupp_stiil.configure('Juhised.TButton',
-                                          font=('Arial', 20)) 
         self.juhised_kinni_nupp = ttk.Button(self.juhiste_raam, text = 'Sulge',
-                                             style='Juhised.TButton',
+                                             style='Nupp1.TButton',
                                              command = self.juhised.destroy)
-        self.juhised_kinni_nupp.grid(column = 0, row = 1)
+        self.juhised_kinni_nupp.grid(column = 0, row = 2)
         
     def valikud(self):
         self.tiitel_raam.destroy()
         self.valikute_raam = ttk.Frame(self)
-        self.valikute_raam.rowconfigure(0, weight = 1)
+        self.valikute_raam.rowconfigure(0, weight = 2)
         self.valikute_raam.rowconfigure(1, weight=1)
         self.valikute_raam.rowconfigure(2, weight=1)
         self.valikute_raam.rowconfigure(3, weight=1)
-        self.valikute_raam.rowconfigure(4, weight=1)
+        self.valikute_raam.rowconfigure(4, weight=2)
         self.valikute_raam.columnconfigure(0, weight=1)
         self.valikute_raam.grid(column=0, row=0, sticky='nsew')
 
         self.info_label = ttk.Label(self.valikute_raam,
-                                    text='Tee mängurežiimi valik!',
-                                    font=20)
-        self.info_label.grid(row=0,column=0)
+                                    text='Mängurežiimi valik',
+                                    style='Tiitel.TLabel',
+                                    anchor='center')
+        self.info_label.grid(row=0,column=0, sticky='nsew')
 
         self.valik = tk.StringVar()
         self.valik.set('20')
@@ -190,11 +242,12 @@ class Programm(tk.Tk):
         self.mangaeg = ttk.Radiobutton(self.valikute_raam,
                                        text='aja peale', variable=self.valik,
                                        value='aeg')
-        self.mang20st.grid(row=1,column=0)
+        self.mang20st.grid(row=1,column=0, sticky='s')
         self.mangzen.grid(row=2,column=0)
-        self.mangaeg.grid(row=3, column=0)
+        self.mangaeg.grid(row=3, column=0, sticky='n')
 
         self.mangunupp = ttk.Button(self.valikute_raam, text='Mängima!',
+                                    style='Nupp1.TButton',
                                     command=self.mang)
         self.mangunupp.grid(row = 4, column = 0)
         
@@ -204,24 +257,25 @@ class Programm(tk.Tk):
         ja selle raami sees olevad aknad."""
         self.tiitel_raam.destroy()
 
-        self.mangu_raam = ttk.Frame(self)
+        self.mangu_raam = ttk.Frame(self, style='Main.TFrame')
         self.mangu_raam.grid(column = 0, row = 0,
                              sticky = 'nsew')
         #mängul on 1 veerg ja 5 rida, võrrandi rida on teistest
         #2 korda suurem.
         self.mangu_raam.columnconfigure(0, weight=1)
         self.mangu_raam.rowconfigure(0, weight = 2)
-        self.mangu_raam.rowconfigure(1, weight = 1)
-        self.mangu_raam.rowconfigure(2, weight = 1)
-        self.mangu_raam.rowconfigure(3, weight = 1)
-        self.mangu_raam.rowconfigure(4, weight = 1)
+        for i in range(1,5):
+            self.mangu_raam.rowconfigure(i, weight = 1)
 
         #paneb taimeri käima, kui on valitud aja peale
         if self.valik.get() == 'aeg':
-            self.aeg = 15
-            
-            self.ajalabel = ttk.Label(self.mangu_raam,
-                                      text=f'{self.aeg} s')
+            self.aeg = 120
+            self.minutid = self.aeg//60
+            self.sekundid = self.aeg-(self.aeg//60)*60
+            if self.sekundid < 10:
+                self.sekundid = '0' + str(self.sekundid)
+            self.ajalabel = ttk.Label(self.mangu_raam, text=f'{self.minutid}:{self.sekundid}',
+                                      style='Lugeja.TLabel')
             self.ajalabel.grid(column=0, row=3)
             self.taimer()
 
@@ -229,13 +283,14 @@ class Programm(tk.Tk):
         self.uus_funktsioon()
 
         self.funktsioon = ttk.Label(self.mangu_raam)
-        self.funktsioon.grid(column = 0, row = 0, sticky= 'ns')
+        self.funktsioon.grid(column = 0, row = 0, sticky= 'n')
 
         #Tehakse uus matplotlibi figuur ja pannakse see self.funktsioon
         #labeli sisse.
-        self.figuur = matplotlib.figure.Figure(figsize = (6, 2), dpi = 100)
+        self.figuur = matplotlib.figure.Figure(figsize = (10, 2.5), dpi = 100,
+                                               facecolor='#ffffff')
         self.latex = FigureCanvasTkAgg(self.figuur, master = self.funktsioon)
-        self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='ns')
+        self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='n')
     
         #Võrrand prinditakse matplotlibi figuuri sisse
         self.figuur.text(0.5, 0.5, self.vorrand,
@@ -246,29 +301,33 @@ class Programm(tk.Tk):
         #Vastuse kasti tegemine
         self.sisestus = tk.StringVar()
         self.vastuse_kast = ttk.Entry(self.mangu_raam,
-                                      font = ('Arial', 20),
+                                      background=self.taustavarv,
+                                      font = ('Verdana', 20),
                                       textvariable = self.sisestus)
-        self.vastuse_kast.grid(column = 0, row = 1, sticky = 'ns')
+        self.vastuse_kast.grid(column = 0, row = 1, sticky = 'ew')
 
         #Kontrollimise nupp
         self.vastamis_nupp = ttk.Button(self.mangu_raam, text = 'Kontrolli',
+                                        style='Nupp1.TButton',
                                         command = self.kontrolli)
         self.vastamis_nupp.grid(column = 0, row = 2)
         
         #Näitab, mitmenda küsimuse peal kasutaja on või palju aega
         if self.valik.get() == '20':
             self.loendur = ttk.Label(self.mangu_raam,
+                                    style='Lugeja.TLabel',
                                     text = f'{self.kysimuse_counter}/20')
             self.loendur.grid(column = 0, row = 3)
 
         #Näitab, kui kasutaja on sisestanud midagi valesti, näitab
         #ka, kas vastus oli õige/vale
-        self.sisestuse_info = ttk.Label(self.mangu_raam)
+        self.sisestuse_info = ttk.Label(self.mangu_raam, style='Tulemus.TLabel')
         self.sisestuse_info.grid(column = 0, row = 4)
 
         #Enter nupp binditud kontrollimiseks, et ei
         #peaks iga kord kontrollimise nuppu vajutama
         self.bind('<Return>', self.kontrolli)
+        self.vastuse_kast.focus()
 
     def uus_funktsioon(self):
         """valib suvaliselt ühte tüüpi võrrandi ja
@@ -450,7 +509,11 @@ class Programm(tk.Tk):
             self.lopp()
         else:
             self.aeg -= 1
-            self.ajalabel.configure(text=f'{self.aeg} s')
+            self.minutid = self.aeg//60
+            self.sekundid = self.aeg-(self.aeg//60)*60
+            if self.sekundid < 10:
+                self.sekundid = '0' + str(self.sekundid)
+            self.ajalabel.configure(text=f'{self.minutid}:{self.sekundid}')
             self.after(1000, self.taimer)
 
         
@@ -466,36 +529,38 @@ class Programm(tk.Tk):
         #Hävitab mängu raami ja loob lõpuekraani raami, kus on kasutaja
         #tulemus 20-st ja kolm nuppu
         self.mangu_raam.destroy()
-        self.lopp_raam = ttk.Frame(self)
+        self.lopp_raam = ttk.Frame(self, style='Main.TFrame')
         self.lopp_raam.grid(column = 0, row = 0, sticky = 'nsew')
         self.lopp_raam.columnconfigure(0, weight = 1)
-        self.lopp_raam.columnconfigure(1, weight = 1)
-        self.lopp_raam.columnconfigure(2, weight = 1)
         self.lopp_raam.rowconfigure(0, weight = 3)
-        self.lopp_raam.rowconfigure(1, weight = 1)
+        for i in range(1,4):
+            self.lopp_raam.rowconfigure(i, weight = 1)
         if self.valik.get() == '20':
             self.tulemus = ttk.Label(self.lopp_raam,
-                                    text = f'Sinu tulemus on {self.oiged}/20.',
-                                    font = ('Arial', 30))
+                                    style='Tiitel.TLabel',
+                                    text = f'Sinu tulemus on {self.oiged}/20.')
         else:
             self.tulemus = ttk.Label(self.lopp_raam,
-                                     text=f'Vastasid {self.oiged} küsimust õigesti.',
-                                     font = ('Arial', 30))
-        self.tulemus.grid(column = 0, row = 0, columnspan = 3)
+                                     style='Tiitel.TLabel',
+                                     text=f'Vastasid {self.oiged} küsimust õigesti.')
+        self.tulemus.grid(column = 0, row = 0, sticky='nsew')
         #Nupp, millega saab minna tiitellehele ja mängu uuesti alustada
         self.uuesti_nupp = ttk.Button(self.lopp_raam,
+                                      style='Nupp1.TButton',
                                       text = 'Tagasi tiitelehele',
                                       command = self.uuesti)
-        self.uuesti_nupp.grid(column = 0, row = 1)
+        self.uuesti_nupp.grid(column = 0, row = 1, padx=240, sticky='ew')
         
         self.sulgemis_nupp_lopp = ttk.Button(self.lopp_raam,
+                                             style='Nupp1.TButton',
                                              text = 'Sulge',
                                              command = self.destroy)
-        self.sulgemis_nupp_lopp.grid(column = 1, row = 1)
+        self.sulgemis_nupp_lopp.grid(column = 0, row = 2, padx=240, sticky='ew')
         self.tulemuste_nupp = ttk.Button(self.lopp_raam,
+                                         style='Nupp1.TButton',
                                          text='Tulemused',
                                          command = self.tulemused)
-        self.tulemuste_nupp.grid(column = 2, row = 1)
+        self.tulemuste_nupp.grid(column = 0, row = 3, padx = 240, sticky='ew')
 
     def uuesti(self):
 
@@ -512,13 +577,11 @@ class Programm(tk.Tk):
         self.tulemuste_aken = tk.Toplevel(self)
         self.tulemuste_aken.geometry(f'{round(self.ekraani_laius/2)}x'
                               + f'{round(self.ekraani_korgus/2)}')
-        stiil = ttk.Style()
-        stiil.configure('Raam.TFrame', background='red')
         self.tulemuste_aken.rowconfigure(0, weight = 1)
         self.tulemuste_aken.columnconfigure(0, weight = 1)
         self.tulemuste_aken.title('Tulemused')
         self.tulemuste_raam = ttk.Frame(self.tulemuste_aken,
-                                        style='Raam.TFrame')
+                                        style='Main.TFrame')
         self.tulemuste_raam.grid(column=0, row=0, sticky='nsew')
         self.tulemuste_raam.rowconfigure(0, weight = 2)
         self.tulemuste_raam.rowconfigure(1, weight=1)
@@ -530,19 +593,19 @@ class Programm(tk.Tk):
         self.tulemuste_notebook.grid(column=0, row=0, columnspan=2,
                                      sticky='nsew')
 
-        self.tulemused_20st = ttk.Frame(self.tulemuste_notebook)
+        self.tulemused_20st = ttk.Frame(self.tulemuste_notebook, style='Main.TFrame')
         self.tulemused_20st.grid(row=0, column=0, sticky='nsew')
         self.tulemused_20st.rowconfigure(0, weight=1)
         self.tulemused_20st.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
 
-        self.tulemused_zen = ttk.Frame(self.tulemuste_notebook)
+        self.tulemused_zen = ttk.Frame(self.tulemuste_notebook, style='Main.TFrame')
         self.tulemused_zen.grid(row=0, column=0, sticky='nsew')
         self.tulemused_zen.rowconfigure(0, weight=1)
         self.tulemused_zen.columnconfigure(0, weight=1)
         self.tulemuste_notebook.add(self.tulemused_zen, text='zen')
 
-        self.tulemused_aeg = ttk.Frame(self.tulemuste_notebook)
+        self.tulemused_aeg = ttk.Frame(self.tulemuste_notebook, style='Main.TFrame')
         self.tulemused_aeg.grid(row=0, column=0, sticky='nsew')
         self.tulemused_aeg.rowconfigure(0, weight=1)
         self.tulemused_aeg.columnconfigure(0, weight=1)
@@ -574,10 +637,12 @@ class Programm(tk.Tk):
                                          rida_oige + '/20-st\n')
         if self.tulemuste_tekst != '':
             self.tulemuste_label = ttk.Label(self.tulemused_20st,
+                                            style='Tulemus.TLabel',
                                             text = self.tulemuste_tekst.get(),
                                             anchor='center')
         else:
             self.tulemuste_label = ttk.Label(self.tulemused_20st,
+                                            style='Tulemus.TLabel',
                                             text = 'Tulemusi veel pole',
                                             anchor='center')
         self.tulemuste_label.grid(row=0, column=0, sticky='nsew')
@@ -590,10 +655,12 @@ class Programm(tk.Tk):
                                          rida_oige + ' õiget vastust\n')
         if self.tulemused_zen_tekst.get() != '':
             self.tulemused_zen_label = ttk.Label(self.tulemused_zen,
+                                                 style='Tulemus.TLabel', 
                                                  text=self.tulemused_zen_tekst.get(),
                                                  anchor='center')
         else:
             self.tulemused_zen_label = ttk.Label(self.tulemused_zen,
+                                                 style='Tulemus.TLabel',
                                                  text='Tulemusi veel pole',
                                                  anchor='center')
         self.tulemused_zen_label.grid(row=0, column=0, sticky='nsew')
@@ -606,23 +673,28 @@ class Programm(tk.Tk):
                                          rida_oige + ' õiget vastust\n')
         if self.tulemused_aeg_tekst.get() != '':
             self.tulemused_aeg_label = ttk.Label(self.tulemused_aeg,
+                                                 style='Tulemus.TLabel',
                                                  text=self.tulemused_aeg_tekst.get(),
                                                  anchor='center')
         else:
             self.tulemused_aeg_label = ttk.Label(self.tulemused_aeg,
+                                                 style='Tulemus.TLabel',
                                                  text='Tulemusi veel pole',
                                                  anchor='center')
         self.tulemused_aeg_label.grid(row=0, column=0, sticky='nsew')
 
         if self.tiitel_raam.winfo_exists() == 1:
             self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
+                                        style='Nupp1.TButton',
                                         command=self.tulemuste_aken.destroy)
             self.tagasi_nupp.grid(column = 0, row = 1, columnspan=2)
         else:
-            self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi', 
+            self.tagasi_nupp = ttk.Button(self.tulemuste_raam, text='Tagasi',
+                                        style='Nupp1.TButton',
                                         command=self.tulemuste_aken.destroy)
             self.tagasi_nupp.grid(column = 0, row = 1)
             self.uus_tulemus_nupp = ttk.Button(self.tulemuste_raam,
+                                            style='Nupp1.TButton',
                                             text='Uus tulemus',
                                             command=self.uus_tulemus)
             self.uus_tulemus_nupp.grid(column=1, row=1)
@@ -631,7 +703,7 @@ class Programm(tk.Tk):
         self.lisamise_aken = tk.Toplevel(self.tulemuste_aken)
         self.lisamise_aken.rowconfigure(0)
         self.lisamise_aken.columnconfigure(0)
-        self.lisamise_raam = ttk.Frame(self.lisamise_aken)
+        self.lisamise_raam = ttk.Frame(self.lisamise_aken, style='Main.TFrame')
         self.lisamise_raam.grid(row=0, column=0)
         self.lisamise_raam.rowconfigure(0, weight=1)
         self.lisamise_raam.rowconfigure(1, weight=1)
@@ -639,6 +711,7 @@ class Programm(tk.Tk):
         self.lisamise_raam.columnconfigure(0, weight=1)
 
         self.nime_text = ttk.Label(self.lisamise_raam,
+                                    style='Tulemus.TLabel',
                                     text='Sisesta oma nimi:')
         self.nime_text.grid(row = 0, column = 0)
         
@@ -648,13 +721,15 @@ class Programm(tk.Tk):
         self.nime_kast.grid(row = 1, column = 0)
 
         self.sisestus_nupp = ttk.Button(self.lisamise_raam,
+                                        style='Nupp1.TButton',
                                         text='Sisesta tulemus',
                                         command=self.lisa_tulemus)
-        self.sisestus_nupp.grid(row=0,column=1)
+        self.sisestus_nupp.grid(row=2,column=0)
         self.tagasi_nupp_tulemus = ttk.Button(self.lisamise_raam,
+                                              style='Nupp1.TButton',
                                               text='Tagasi',
                                               command=self.lisamise_aken.destroy)
-        self.tagasi_nupp_tulemus.grid(row=1,column=1)
+        self.tagasi_nupp_tulemus.grid(row=2,column=1)
 
     def lisa_tulemus(self):
         if self.valik.get() == '20':

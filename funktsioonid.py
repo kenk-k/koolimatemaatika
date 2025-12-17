@@ -63,7 +63,7 @@ def format_term(kordaja, valem, mode='latex', esimene=False):
 
 def lineaar():
     lahendus = random.randint(-20, 21)
-    a = random.choice([i for i in range(-20, 21) if i != 0])
+    a = random.choice([i for i in range(-5, 6) if i != 0])
     b = random.randint(-20, 21)
     c = a * lahendus + b
 

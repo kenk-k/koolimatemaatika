@@ -1,3 +1,4 @@
 Lineaarfunktsiooni , eksponentfunktsiooni ja logaritmfunktsiooni korral sisestada vastus.
 Ruutfunktsiooni korral sisestada vastused koma ja tühikuga eraldatult.
 Trigonomeetriliste funktsioonide korral sisestada vastus -360 ja 360 kraadi vahel.
+Tuletise korral sisestada funktsioon Pythoni süntaksi kaudu.

@@ -68,7 +68,7 @@ class Programm(tk.Tk):
 
         self.configure(bg=self.taustavarv)
 
-        self.title('Matemaatika mäng')
+        self.title('Matemaatika treener')
         #Võtab ekraani suuruse arvesse, et mängu aken oleks sama suur
         #nii madala kui kõrge resolutsiooniga monitoridel.
         self.ekraani_laius = self.winfo_screenwidth()
@@ -109,6 +109,8 @@ class Programm(tk.Tk):
                        borderwidth=0,
                        focuscolor='none',
                        padding=(20, 12))
+        self.stiil.configure('Raadio.TRadiobutton',
+                             font=('Verdana', 16))
         
         self.stiil.map('Nupp1.TButton',
                  background=[('active', '#3a3a3a'),
@@ -142,7 +144,7 @@ class Programm(tk.Tk):
 
         self.tiitel_nimi = ttk.Label(self.tiitel_raam,
                                      style='Tiitel.TLabel',
-                                     text='Matemaatika mäng',
+                                     text='Matemaatika treener',
                                      anchor='center')
         self.tiitel_nimi.grid(column = 1, row = 0, sticky = 'nsew')
 
@@ -235,13 +237,13 @@ class Programm(tk.Tk):
         self.mang20st = ttk.Radiobutton(self.valikute_raam,
                                         text='Mäng 20 küsimusega',
                                         variable=self.valik,
-                                        value='20')
+                                        value='20', style='Raadio.TRadiobutton')
         self.mangzen = ttk.Radiobutton(self.valikute_raam,
-                                       text='zen', variable=self.valik,
-                                       value='zen')
+                                       text='Mäng eksimiseni', variable=self.valik,
+                                       value='zen', style='Raadio.TRadiobutton')
         self.mangaeg = ttk.Radiobutton(self.valikute_raam,
-                                       text='aja peale', variable=self.valik,
-                                       value='aeg')
+                                       text='Mäng aja peale', variable=self.valik,
+                                       value='aeg', style='Raadio.TRadiobutton')
         self.mang20st.grid(row=1,column=0, sticky='s')
         self.mangzen.grid(row=2,column=0)
         self.mangaeg.grid(row=3, column=0, sticky='n')
@@ -543,7 +545,7 @@ class Programm(tk.Tk):
             self.tulemus = ttk.Label(self.lopp_raam,
                                      style='Tiitel.TLabel',
                                      text=f'Vastasid {self.oiged} küsimust õigesti.')
-        self.tulemus.grid(column = 0, row = 0, sticky='nsew')
+        self.tulemus.grid(column = 0, row = 0, sticky='ns')
         #Nupp, millega saab minna tiitellehele ja mängu uuesti alustada
         self.uuesti_nupp = ttk.Button(self.lopp_raam,
                                       style='Nupp1.TButton',
@@ -597,19 +599,19 @@ class Programm(tk.Tk):
         self.tulemused_20st.grid(row=0, column=0, sticky='nsew')
         self.tulemused_20st.rowconfigure(0, weight=1)
         self.tulemused_20st.columnconfigure(0, weight=1)
-        self.tulemuste_notebook.add(self.tulemused_20st, text='20-st')
+        self.tulemuste_notebook.add(self.tulemused_20st, text='Mäng 20-st')
 
         self.tulemused_zen = ttk.Frame(self.tulemuste_notebook, style='Main.TFrame')
         self.tulemused_zen.grid(row=0, column=0, sticky='nsew')
         self.tulemused_zen.rowconfigure(0, weight=1)
         self.tulemused_zen.columnconfigure(0, weight=1)
-        self.tulemuste_notebook.add(self.tulemused_zen, text='zen')
+        self.tulemuste_notebook.add(self.tulemused_zen, text='Eksimiseni')
 
         self.tulemused_aeg = ttk.Frame(self.tulemuste_notebook, style='Main.TFrame')
         self.tulemused_aeg.grid(row=0, column=0, sticky='nsew')
         self.tulemused_aeg.rowconfigure(0, weight=1)
         self.tulemused_aeg.columnconfigure(0, weight=1)
-        self.tulemuste_notebook.add(self.tulemused_aeg, text='aja peale')
+        self.tulemuste_notebook.add(self.tulemused_aeg, text='Mäng aja peale')
 
         self.tulemuste_tekst = tk.StringVar()
         self.tulemused_zen_tekst = tk.StringVar()
@@ -701,6 +703,7 @@ class Programm(tk.Tk):
 
     def uus_tulemus(self):
         self.lisamise_aken = tk.Toplevel(self.tulemuste_aken)
+        self.lisamise_aken.title = 'Tulemuse lisamine'
         self.lisamise_aken.rowconfigure(0)
         self.lisamise_aken.columnconfigure(0)
         self.lisamise_raam = ttk.Frame(self.lisamise_aken, style='Main.TFrame')
@@ -713,23 +716,23 @@ class Programm(tk.Tk):
         self.nime_text = ttk.Label(self.lisamise_raam,
                                     style='Tulemus.TLabel',
                                     text='Sisesta oma nimi:')
-        self.nime_text.grid(row = 0, column = 0)
+        self.nime_text.grid(row = 0, column = 0, columnspan=2)
         
         self.nimi = tk.StringVar()
         self.nime_kast = ttk.Entry(self.lisamise_raam,
                                     textvariable=self.nimi)
-        self.nime_kast.grid(row = 1, column = 0)
+        self.nime_kast.grid(row = 1, column = 0, columnspan=2)
 
         self.sisestus_nupp = ttk.Button(self.lisamise_raam,
                                         style='Nupp1.TButton',
                                         text='Sisesta tulemus',
                                         command=self.lisa_tulemus)
-        self.sisestus_nupp.grid(row=2,column=0)
+        self.sisestus_nupp.grid(row=2,column=0,padx=15,pady=5)
         self.tagasi_nupp_tulemus = ttk.Button(self.lisamise_raam,
                                               style='Nupp1.TButton',
                                               text='Tagasi',
                                               command=self.lisamise_aken.destroy)
-        self.tagasi_nupp_tulemus.grid(row=2,column=1)
+        self.tagasi_nupp_tulemus.grid(row=2,column=1,padx=15, pady=5)
 
     def lisa_tulemus(self):
         if self.valik.get() == '20':

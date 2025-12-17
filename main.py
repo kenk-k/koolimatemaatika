@@ -571,19 +571,19 @@ class Programm(tk.Tk):
                                       style='Nupp1.TButton',
                                       text = 'Tagasi tiitelehele',
                                       command = self.uuesti)
-        self.uuesti_nupp.grid(column = 0, row = 1, padx=240, sticky='ew')
+        self.uuesti_nupp.grid(column = 0, row = 1, padx=60, sticky='ew')
         
         self.sulgemis_nupp_lopp = ttk.Button(self.lopp_raam,
                                              style='Nupp1.TButton',
                                              text = 'Sulge',
                                              command = self.destroy)
         self.sulgemis_nupp_lopp.grid(column = 0, row = 2,
-                                     padx=240, sticky='ew')
+                                     padx=60, sticky='ew')
         self.tulemuste_nupp = ttk.Button(self.lopp_raam,
                                          style='Nupp1.TButton',
                                          text='Tulemused',
                                          command = self.tulemused)
-        self.tulemuste_nupp.grid(column = 0, row = 3, padx = 240, sticky='ew')
+        self.tulemuste_nupp.grid(column = 0, row = 3, padx = 60, sticky='ew')
 
     def uuesti(self):
 
@@ -645,15 +645,15 @@ class Programm(tk.Tk):
             os.makedirs('tulemused/')
         if not os.path.exists('tulemused/tulemused-20st.csv'):
             with open('tulemused/tulemused-20st.csv','w',
-                      encoding='utf-8') as fail:
+                      encoding='utf-8', newline='') as fail:
                 pass
         if not os.path.exists('tulemused/tulemused-zen.csv'):
             with open('tulemused/tulemused-zen.csv', 'w',
-                      encoding='utf-8') as fail:
+                      encoding='utf-8', newline='') as fail:
                 pass
         if not os.path.exists('tulemused/tulemused-aeg.csv'):
             with open('tulemused/tulemused-aeg.csv', 'w',
-                      encoding='utf-8') as fail:
+                      encoding='utf-8', newline='') as fail:
                 pass 
         #kõik tulemused loetakse vastavasse notebooki alaaknasse
         with open('tulemused/tulemused-20st.csv', encoding='utf-8') as t_fail:
@@ -767,17 +767,17 @@ class Programm(tk.Tk):
         """
         if self.valik.get() == '20':
             with open('tulemused/tulemused-20st.csv', 'a',
-                      encoding='utf-8') as t_fail:
+                      encoding='utf-8', newline='') as t_fail:
                 csv_kirjutaja = csv.writer(t_fail)
                 csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
         elif self.valik.get() == 'zen':
             with open('tulemused/tulemused-zen.csv', 'a',
-                      encoding='utf-8') as tz_fail:
+                      encoding='utf-8', newline='') as tz_fail:
                 csv_kirjutaja = csv.writer(tz_fail)
                 csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
         else:
             with open('tulemused/tulemused-aeg.csv', 'a',
-                      encoding='utf-8') as ta_fail:
+                      encoding='utf-8', newline='') as ta_fail:
                 csv_kirjutaja = csv.writer(ta_fail)
                 csv_kirjutaja.writerow([self.nimi.get(), self.oiged])
 

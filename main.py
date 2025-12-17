@@ -90,7 +90,7 @@ class Programm(tk.Tk):
         self.stiil.configure('Tiitel.TLabel',
                              #background=self.taustavarv,
                              foreground=self.tekst1,
-                             font=('Verdana', 42))
+                             font=('Verdana', 35))
         
         self.stiil.configure('Lugeja.TLabel',
                              #background=self.taustavarv,
@@ -151,25 +151,25 @@ class Programm(tk.Tk):
         self.start_nupp = ttk.Button(self.tiitel_raam, text='Mängima!',
                                      style='Nupp1.TButton',
                                      command=self.valikud)
-        self.start_nupp.grid(column = 1, row = 1, padx = 240, sticky = 'we')
+        self.start_nupp.grid(column = 1, row = 1, padx = 60, sticky = 'we')
 
         self.juhised_nupp = ttk.Button(self.tiitel_raam,
                                        text = 'Juhised',
                                        style='Nupp1.TButton',
                                        command=self.juhised)
-        self.juhised_nupp.grid(column = 1, row = 2, padx = 240, sticky = 'we')
+        self.juhised_nupp.grid(column = 1, row = 2, padx = 60, sticky = 'we')
         
         self.kinni_nupp = ttk.Button(self.tiitel_raam,
                                      text='Sulge',
                                      style='Nupp1.TButton',
                                      command=self.destroy)
-        self.kinni_nupp.grid(column=1, row=4, padx = 240, sticky = 'we')
+        self.kinni_nupp.grid(column=1, row=4, padx = 60, sticky = 'we')
         
         self.tulemused2_nupp = ttk.Button(self.tiitel_raam,
                                           text='Tulemused',
                                           style='Nupp1.TButton',
                                           command=self.tulemused)
-        self.tulemused2_nupp.grid(column=1, row = 3, padx = 240, sticky = 'we')
+        self.tulemused2_nupp.grid(column=1, row = 3, padx = 60, sticky = 'we')
 
     def juhised(self):
 
@@ -296,7 +296,7 @@ class Programm(tk.Tk):
 
         #Tehakse uus matplotlibi figuur ja pannakse see self.funktsioon
         #labeli sisse.
-        self.figuur = matplotlib.figure.Figure(figsize = (10, 2.5), dpi = 100,
+        self.figuur = matplotlib.figure.Figure(figsize = (5, 2.5), dpi = 100,
                                                facecolor='#ffffff')
         self.latex = FigureCanvasTkAgg(self.figuur, master = self.funktsioon)
         self.latex.get_tk_widget().grid(column = 0, row = 0, sticky='n')

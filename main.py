@@ -24,7 +24,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from random import randint
-
+    
 import csv
 import os.path
 import os

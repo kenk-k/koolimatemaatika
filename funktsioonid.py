@@ -63,7 +63,7 @@ def format_term(kordaja, valem, mode='latex', esimene=False):
 
 def lineaar():
     lahendus = random.randint(-20, 21)
-    a = random.choice([i for i in range(-20, 21) if i != 0])
+    a = random.choice([i for i in range(-5, 6) if i != 0])
     b = random.randint(-20, 21)
     c = a * lahendus + b
 
@@ -227,7 +227,8 @@ def tuletis():
 
     if funktsiooni_tuup == "ln":
         a = random.choice([i for i in range(-5, 6) if i != 0])
-        return f"$f(x) = {format_term(a, r'\ln(x)', esimene=True)}$", f"{a}/x"
+        ln_tuletis = format_term(a, r'\ln(x)', esimene=True)
+        return f"$f(x) = {ln_tuletis}$", f"{a}/x"
 
     if funktsiooni_tuup == "trig":
         a = random.choice([i for i in range(-5, 6) if i != 0])
@@ -238,12 +239,13 @@ def tuletis():
         arg = "x" if k == 1 else f"{k}x"
 
         if trig == "sin":
+            sin_tuletis = format_term(a, f'\\sin({arg})', esimene=True)
             return (
-                f"$f(x) = {format_term(a, f'\\sin({arg})', esimene=True)}$",
+                f"$f(x) = {sin_tuletis}$",
                 f"{a*k}*cos({k}*x)"
             )
-
+        cos_tuletis = format_term(a, f'\\cos({arg})', esimene=True)
         return (
-            f"$f(x) = {format_term(a, f'\\cos({arg})', esimene=True)}$",
+            f"$f(x) = {cos_tuletis}$",
             f"-{a*k}*sin({k}*x)"
         )
